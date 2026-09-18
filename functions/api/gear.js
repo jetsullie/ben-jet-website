@@ -1,0 +1,2 @@
+import { listItems, responseItem } from '../_shared/gear.js';
+export const onRequestGet=async({env})=>{if(!env.CONTENT_KV)return Response.json({items:[]},{headers:{'Cache-Control':'public, max-age=60'}});try{return Response.json({items:(await listItems(env.CONTENT_KV)).map(responseItem)},{headers:{'Cache-Control':'public, max-age=60'}})}catch(error){console.error(error);return Response.json({error:'Gear is temporarily unavailable.',items:[]},{status:500})}};

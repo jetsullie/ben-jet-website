@@ -1,0 +1,19 @@
+---
+import Header from '../components/common/Header.astro';
+import Plus from '../components/common/Plus.astro';
+import PageMotion from '../components/common/PageMotion.astro';
+import '../styles/site.css';
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title} — Jet Sullivan & Ben Stapleton</title><meta name="description" content={description} />
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} /><link rel="icon" href="/brand-center-favicon.png" />
+<meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:type" content="website" />
+</head>
+<body><a class="skip-link" href="#main">Skip to content</a><div class="site-motion" data-motion-root data-motion-speed="0.8"><Header /><main id="main"><slot /></main>
+<footer class="team-footer"><a class="footer-name" href="/">Jet Sullivan <span>×</span> Ben Stapleton</a><span>Austin, Texas</span><a class="footer-action" href="/contact/">Let’s make something. <Plus /></a></footer></div><PageMotion />
+</body>
+</html>
