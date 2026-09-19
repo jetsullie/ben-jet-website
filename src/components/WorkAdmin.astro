@@ -1,0 +1,29 @@
+<section class="work-admin" aria-labelledby="work-editor-title">
+  <p class="eyebrow">PREVIOUS WORK</p><h2 id="work-editor-title">Publish a story.</h2>
+  <form id="work-form" enctype="multipart/form-data">
+    <input name="id" type="hidden" />
+    <div class="work-fields">
+      <label>Section<select name="section"><option value="remember">Remember / Weddings</option><option value="connect">Connect / Corporate</option><option value="capture">Capture / Documentary</option></select></label>
+      <label>Date it happened (optional)<input name="date" type="date" /><small>Newest dates appear first. Undated posts appear last.</small></label>
+      <label class="wide">Title<input name="title" maxlength="120" required /></label>
+      <label class="wide">Short description<textarea name="description" maxlength="800" required></textarea></label>
+      <label class="wide">Link (optional)<input name="link" type="url" maxlength="2048" placeholder="https://" /></label>
+      <label>Post attachment (optional)<input name="attachment" type="file" accept="image/jpeg,image/png,image/webp,image/avif,image/gif,video/mp4,video/webm,video/ogg,video/quicktime,application/pdf,audio/mpeg,audio/mp4,audio/ogg,audio/wav,text/plain,application/zip,.doc,.docx,.xls,.xlsx,.ppt,.pptx" /><small>Images, videos, audio, PDFs, text, Office documents, or ZIP files. Maximum 100 MB.</small></label>
+      <label>Attachment description<input name="attachmentAlt" maxlength="180" /><small id="work-attachment-current"></small></label>
+      <label class="work-checkbox"><input name="removeAttachment" type="checkbox" value="true" /> Remove the current attachment</label>
+    </div>
+    <div class="work-actions"><button class="button contact-cta" type="submit">Publish post</button><button class="button" id="work-cancel" type="button" hidden>Cancel edit</button><output id="work-status" aria-live="polite"></output></div>
+  </form>
+  <h3 class="work-list-heading">Published work</h3><div id="work-admin-list"></div>
+  <dialog id="work-delete-dialog"><form method="dialog"><h2>Delete this post?</h2><p id="work-delete-copy"></p><div class="work-actions"><button class="button" value="cancel">Keep post</button><button class="button" value="confirm">Delete post</button></div></form></dialog>
+</section>
+<script>import '../scripts/work-admin';</script>
+<style>
+.work-admin{margin:28px 0;padding:clamp(25px,4vw,48px);border:1px solid #ffffff30;background:var(--black)}
+.work-admin h2{font-size:clamp(2.4rem,5vw,4.5rem)}
+.work-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}.work-fields label{display:grid;gap:9px;font-weight:800}.wide{grid-column:1/-1}
+.work-fields input,.work-fields select,.work-fields textarea{width:100%;padding:15px;border:1px solid #ffffff70;border-radius:12px;background:var(--gray);color:white;font:inherit}.work-fields textarea{min-height:120px;resize:vertical}.work-fields small{font-weight:400;line-height:1.5;color:#ddd}.work-fields .work-checkbox{display:flex;align-items:center}.work-checkbox input{width:auto}
+.work-actions{display:flex;align-items:center;flex-wrap:wrap;gap:15px;margin-top:24px}.work-actions button{cursor:pointer;font-family:inherit}.work-actions button[hidden]{display:none}.work-actions button:disabled{opacity:.6;cursor:wait}.work-list-heading{margin-top:48px}
+dialog{max-width:520px;padding:30px;border:1px solid #25252530;border-radius:20px;color:var(--black);background:white}dialog h2{font-size:2rem}dialog::backdrop{background:#252525bb}
+@media(max-width:650px){.work-fields{grid-template-columns:1fr}.wide{grid-column:auto}}
+</style>

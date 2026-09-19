@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GlassShapes from '../components/common/GlassShapes.astro';
+import DisclosureIcon from '../components/common/DisclosureIcon.astro';
+import Arrow from '../components/common/Arrow.astro';
+const sections = [
+  { id: 'remember', title: 'Remember', category: 'Wedding films', tone: 'pink', number: '01', headline: 'The moments that stay.', description: 'Big feelings. Quiet moments. Stories to come back to.', empty: 'Wedding films will appear here as our collection is added.' },
+  { id: 'connect', title: 'Connect', category: 'Corporate interviews', tone: 'blue', number: '02', headline: 'People behind the story.', description: 'Conversations with purpose, told with a personal perspective.', empty: 'Corporate interviews will appear here as our collection is added.' },
+  { id: 'capture', title: 'Capture', category: 'Documentaries & more', tone: 'mint', number: '03', headline: 'Real life. A closer look.', description: 'Curiosity, real people, and stories worth sharing.', empty: 'Documentaries and other films will appear here as our collection is added.' },
+];
+---
+<Layout title="Previous work" description="Explore wedding films, corporate interviews, and documentaries from Jet Sullivan and Ben Stapleton.">
+  <section class="work-hero section-shell"><GlassShapes tone="blue" />
+    <div class="wrap work-intro">
+      <p class="eyebrow">JET × BEN / PREVIOUS WORK</p>
+      <div class="work-intro-grid"><h1>Stories<br /><span>that stay.</span></h1><div><p>Different people. Different perspectives.<br />The same full attention.</p><p class="work-intro-note">Explore our work by the stories we tell.</p></div></div>
+      <nav class="work-jumps" aria-label="Explore previous work">
+        {sections.map(section => <a href={`#${section.id}`}><span>{section.number}</span>{section.title}<Arrow /></a>)}
+      </nav>
+    </div>
+  </section>
+  <section class="work-collection section-shell" aria-label="Previous work collections"><GlassShapes tone="pink" />
+    <div class="wrap work-collections">
+      {sections.map(section => <details id={section.id} class:list={['work-disclosure', `work-disclosure--${section.tone}`]} data-disclosure data-work-section>
+        <summary>
+          <span class="work-number">{section.number}</span>
+          <span class="work-summary-copy"><span class="eyebrow">{section.category}</span><strong>{section.title}</strong></span>
+          <DisclosureIcon />
+        </summary>
+        <div class="work-content">
+          <div class="work-description"><p class="eyebrow">{section.category}</p><h2>{section.headline}</h2><p>{section.description}</p></div>
+          <div class="work-entries" data-work-entries={section.id}><div class="work-empty"><span class="work-frame-mark" aria-hidden="true">{section.number}</span><h3>Films coming soon.</h3><p>{section.empty}</p></div></div>
+        </div>
+      </details>)}
+    </div>
+  </section>
+  <section class="closing-band section-shell"><GlassShapes tone="blue" /><div class="closing wrap"><p class="eyebrow dark-eyebrow">THE NEXT STORY COULD BE YOURS</p><h2>Let’s make something.</h2><a class="button contact-cta" href="/contact/">Start a project <Arrow /></a></div></section>
+</Layout>
+
+<script>
+  import "../scripts/work-public";
+</script>

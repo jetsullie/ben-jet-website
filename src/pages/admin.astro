@@ -1,14 +1,18 @@
 ---
-import Plus from '../components/common/Plus.astro';
+import PageMotion from '../components/common/PageMotion.astro';
+import WorkAdmin from '../components/WorkAdmin.astro';
+import GlassShapes from '../components/common/GlassShapes.astro';
+import Arrow from '../components/common/Arrow.astro';
 import '../styles/site.css';
 ---
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta name="robots" content="noindex,nofollow,noarchive" /><link rel="icon" href="/brand-center-favicon.png" /><title>Gear Admin — Jet × Ben</title></head>
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><meta name="robots" content="noindex,nofollow,noarchive" /><link rel="icon" href="/brand-center-favicon.png" /><title>Site Admin — Jet × Ben</title></head>
 <body class="admin-body">
-  <main class="admin-main">
-    <header class="admin-header"><div><p class="eyebrow">PRIVATE OWNER DASHBOARD</p><h1>Gear admin.</h1><p>Add, update, and remove equipment shown in the homepage collection.</p></div><div class="admin-header-actions"><a href="/">View website <Plus /></a><a href="/cdn-cgi/access/logout">Sign out</a></div></header>
+  <main class="admin-main"><GlassShapes tone="mint" />
+    <header class="admin-header"><div><p class="eyebrow">PRIVATE OWNER DASHBOARD</p><h1>Site admin.</h1><p>Publish previous work and manage the shared gear collection.</p></div><div class="admin-header-actions"><a href="/">View website <Arrow /></a><a href="/cdn-cgi/access/logout">Sign out</a></div></header>
 
+    <WorkAdmin />
     <section class="admin-panel" aria-labelledby="gear-editor-title">
       <div class="admin-panel-heading"><span>01</span><div><p class="eyebrow">COLLECTION EDITOR</p><h2 id="gear-editor-title">List gear</h2></div></div>
       <form id="gear-form" enctype="multipart/form-data">
@@ -22,7 +26,7 @@ import '../styles/site.css';
           <label class="wide"><span>Description</span><textarea id="gear-description" name="description" maxlength="20000" required></textarea></label>
           <label class="wide"><span>Parts in the kit</span><textarea id="gear-kit-parts" name="kitParts" placeholder="One part per line"></textarea><small>Blank lines are ignored.</small></label>
         </div>
-        <div class="admin-actions"><button id="gear-submit" type="submit">Add gear <Plus /></button><button id="gear-cancel" class="secondary" type="button" hidden>Cancel edit</button><output id="gear-status" aria-live="polite"></output></div>
+        <div class="admin-actions"><button id="gear-submit" type="submit">Add gear <Arrow /></button><button id="gear-cancel" class="secondary" type="button" hidden>Cancel edit</button><output id="gear-status" aria-live="polite"></output></div>
       </form>
     </section>
 
@@ -30,7 +34,7 @@ import '../styles/site.css';
   </main>
 
   <dialog id="gear-delete-dialog"><form method="dialog"><p class="eyebrow">CONFIRM DELETION</p><h2>Delete this gear item?</h2><p id="gear-delete-message"></p><div class="admin-actions"><button class="secondary" value="cancel">Keep gear</button><button id="gear-delete-submit" class="danger" value="confirm">Delete gear</button></div></form></dialog>
-</body>
+<PageMotion /></body>
 </html>
 
 <script>
@@ -50,5 +54,11 @@ import '../styles/site.css';
 </script>
 
 <style>
-  .admin-body{background:var(--grid),var(--gray);color:var(--white)}.admin-main{width:min(1180px,90%);margin:auto;padding:60px 0 100px}.admin-header{display:flex;justify-content:space-between;gap:50px;align-items:flex-end;margin-bottom:55px}.admin-header h1{margin:10px 0;font-size:clamp(3.5rem,9vw,8rem)}.admin-header>div>p:last-child{color:#ccc}.admin-header-actions{display:flex;gap:12px;flex-wrap:wrap}.admin-header-actions a{display:flex;align-items:center;gap:12px;padding:13px 18px;border:2px solid var(--white);border-radius:999px;font-weight:800}.admin-panel{margin-top:28px;padding:clamp(25px,4vw,48px);border:6px solid var(--white);border-radius:25px;background:var(--black);box-shadow:12px 12px 0 #111}.admin-panel-heading{display:flex;gap:25px;align-items:flex-start;margin-bottom:35px}.admin-panel-heading>span{padding-top:9px;font-weight:900}.admin-panel-heading h2{margin:5px 0 0;font-size:clamp(2.4rem,5vw,4.5rem)}.admin-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}.admin-fields label{display:grid;gap:9px;font-weight:800}.admin-fields label>span{font-size:12px;letter-spacing:.08em;text-transform:uppercase}.admin-fields .wide{grid-column:1/-1}.admin-fields input,.admin-fields textarea{width:100%;padding:15px;border:3px solid var(--white);border-radius:12px;background:var(--gray);color:var(--white);font:inherit}.admin-fields textarea{min-height:140px;resize:vertical}.admin-fields small{color:#aaa}.admin-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px}.admin-actions button,.admin-actions a{display:inline-flex;align-items:center;gap:15px;padding:13px 18px;border:3px solid var(--white);border-radius:999px;background:var(--yellow);color:var(--black);font:800 .85rem var(--body);cursor:pointer}.admin-actions .secondary{background:var(--white)}.admin-actions .danger{background:#f55c66}.admin-actions output{color:var(--yellow);font-weight:800}.admin-gear-list{display:grid;gap:18px}.admin-gear-card{display:grid;grid-template-columns:190px 1fr;gap:25px;padding:18px;border:3px solid var(--white);border-radius:18px;background:var(--gray)}.admin-gear-card img{width:190px;height:190px;object-fit:cover;border-radius:12px}.admin-gear-card h3{margin:7px 0 10px}.admin-gear-card p{color:#ddd;white-space:pre-line}.admin-gear-card .eyebrow{color:var(--yellow)}dialog{max-width:540px;padding:35px;border:6px solid var(--black);border-radius:22px;box-shadow:12px 12px 0 var(--black)}dialog::backdrop{background:#252525cc}@media(max-width:700px){.admin-header{align-items:flex-start;flex-direction:column}.admin-fields{grid-template-columns:1fr}.admin-fields .wide{grid-column:auto}.admin-gear-card{grid-template-columns:1fr}.admin-gear-card img{width:100%;height:220px}}
+  .admin-body{background:var(--black);color:var(--white)}.admin-main{width:min(1180px,90%);margin:auto;padding:60px 0 100px}.admin-header{display:flex;justify-content:space-between;gap:50px;align-items:flex-end;margin-bottom:55px}.admin-header h1{margin:10px 0;font-size:clamp(3.5rem,9vw,8rem)}.admin-header>div>p:last-child{color:#ccc}.admin-header-actions{display:flex;gap:12px;flex-wrap:wrap}.admin-header-actions a{display:flex;align-items:center;gap:12px;padding:13px 18px;border:2px solid var(--white);border-radius:999px;font-weight:800}.admin-panel{margin-top:28px;padding:clamp(25px,4vw,48px);border:1px solid #ffffff30;border-radius:0;background:var(--black);box-shadow:none}.admin-panel-heading{display:flex;gap:25px;align-items:flex-start;margin-bottom:35px}.admin-panel-heading>span{padding-top:9px;font-weight:900}.admin-panel-heading h2{margin:5px 0 0;font-size:clamp(2.4rem,5vw,4.5rem)}.admin-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px}.admin-fields label{display:grid;gap:9px;font-weight:800}.admin-fields label>span{font-size:12px;letter-spacing:.08em;text-transform:uppercase}.admin-fields .wide{grid-column:1/-1}.admin-fields input,.admin-fields textarea{width:100%;padding:15px;border:3px solid var(--white);border-radius:12px;background:var(--gray);color:var(--white);font:inherit}.admin-fields textarea{min-height:140px;resize:vertical}.admin-fields small{color:#aaa}.admin-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px}.admin-actions button,.admin-actions a{display:inline-flex;align-items:center;gap:15px;padding:13px 18px;border:3px solid var(--white);border-radius:999px;background:var(--yellow);color:var(--black);font:800 .85rem var(--body);cursor:pointer}.admin-actions .secondary{background:var(--white)}.admin-actions .danger{background:#f55c66}.admin-actions output{color:inherit;font-weight:800}.admin-gear-list{display:grid;gap:18px}.admin-gear-card{display:grid;grid-template-columns:190px 1fr;gap:25px;padding:18px;border:3px solid var(--white);border-radius:18px;background:var(--gray)}.admin-gear-card img{width:190px;height:190px;object-fit:contain;background:var(--white);padding:12px;border-radius:12px}.admin-gear-card h3{margin:7px 0 10px}.admin-gear-card p{color:#ddd;white-space:pre-line}.admin-gear-card .eyebrow{color:inherit}dialog{max-width:540px;padding:35px;border:6px solid var(--black);border-radius:22px;box-shadow:12px 12px 0 var(--black)}dialog::backdrop{background:#252525cc}@media(max-width:700px){.admin-header{align-items:flex-start;flex-direction:column}.admin-fields{grid-template-columns:1fr}.admin-fields .wide{grid-column:auto}.admin-gear-card{grid-template-columns:1fr}.admin-gear-card img{width:100%;height:220px}}
+
+  .admin-header-actions a,.admin-actions button,.admin-actions .secondary,.admin-actions .danger{border:1px solid #ffffff94;background:rgb(255 255 255 / 86%);color:var(--black);outline:1px solid #ffffff29;outline-offset:-3px;box-shadow:0 8px 28px #25252524;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:background-color 180ms ease,box-shadow 220ms ease,transform 280ms cubic-bezier(.34,1.4,.64,1)}
+  .admin-actions .danger{background:#fdbfbf}
+  .admin-header-actions a:hover,.admin-actions button:hover{background:var(--white);color:var(--black);transform:translateY(-3px);box-shadow:0 8px 28px #25252524,0 0 18px #ffffff61}
+  .admin-actions button[hidden]{display:none}
+  dialog{background:var(--white);color:var(--black)}
 </style>

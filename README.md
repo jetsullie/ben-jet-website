@@ -27,3 +27,15 @@ Deploy the generated `dist/` directory. Hosting build command: `npm run build`; 
 - `src/styles/site.css`: brand colors, shared typography, responsive styling, and reduced-motion support.
 
 Brand references: the existing website’s brand center and gear page. No portraits, fabricated portfolio projects, or unconfirmed gear have been added.
+
+## Previous work publishing
+
+`/previous-work/` contains Remember, Connect, and Capture. Links to `#remember`, `#connect`, and `#capture` open the matching collection. Publish through the **Previous Work** editor at `/admin/`: choose a section, title, description, optional event date, optional HTTPS link, and optional attachment (up to 100 MB). Edit, replace/remove attachments, and delete posts in the same editor. Projects appear newest event date first; undated posts follow, ordered by publication time. On the homepage, click or tap the footer name three times within 1.2 seconds to open `/admin/`. The shortcut still uses the existing owner sign-in protection.
+
+The editor reuses the Jet Sullivan site's media-entry API, validation, attachment storage, and ranged media delivery. Its categories are restricted to this site's three collections, with separate `team-work:` KV keys. The existing `/admin/*` owner middleware protects writes. Cloudflare Pages needs the existing `CONTENT_KV`, `MEDIA_BUCKET`, and owner-access bindings configured; Astro's local dev server serves the design but does not execute Pages Functions. No projects are fabricated or published by this change.
+
+## Admin identities
+
+The server-side allowlist permits only `jetsullivan1@gmail.com` and `benstapleton06@gmail.com`, after verification of the Cloudflare Access token. This email is used for Ben's private admin identity; it is not added to the public contact page.
+
+Deployment setup still needs a Cloudflare Access policy allowing these same two exact identities for `/admin` and `/admin/*`, MFA enforcement, and valid `CF_ACCESS_DOMAIN` and `CF_ACCESS_AUD` bindings. Verify protection on every deployed hostname and preview before enabling publishing. Updating this repository does not change the Cloudflare dashboard policy. Missing authentication configuration continues to deny access.

@@ -1,6 +1,6 @@
 ---
 import Header from '../components/common/Header.astro';
-import Plus from '../components/common/Plus.astro';
+import Arrow from '../components/common/Arrow.astro';
 import PageMotion from '../components/common/PageMotion.astro';
 import '../styles/site.css';
 const { title, description } = Astro.props;
@@ -14,6 +14,11 @@ const { title, description } = Astro.props;
 <meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:type" content="website" />
 </head>
 <body><a class="skip-link" href="#main">Skip to content</a><div class="site-motion" data-motion-root data-motion-speed="0.8"><Header /><main id="main"><slot /></main>
-<footer class="team-footer"><a class="footer-name" href="/">Jet Sullivan <span>×</span> Ben Stapleton</a><span>Austin, Texas</span><a class="footer-action" href="/contact/">Let’s make something. <Plus /></a></footer></div><PageMotion />
+<footer class="team-footer"><a class="footer-name" href="/" data-admin-shortcut={Astro.url.pathname === "/" ? "true" : undefined}>Jet Sullivan <span>×</span> Ben Stapleton</a><span>Austin, Texas</span><a class="footer-action" href="/contact/">Let’s make something. <Arrow /></a></footer></div><PageMotion />
 </body>
 </html>
+
+<script>
+  import '../scripts/disclosures';
+  import '../scripts/admin-shortcut';
+</script>

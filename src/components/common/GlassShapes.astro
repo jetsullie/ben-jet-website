@@ -1,0 +1,8 @@
+---
+const { tone = 'blue' } = Astro.props;
+---
+<div class:list={['glass-shapes', `glass-shapes--${tone}`]} aria-hidden="true">
+  <span class="glass-shape glass-shape--panel"></span>
+  <span class="glass-shape glass-shape--orb"></span>
+  <span class="glass-shape glass-shape--small"></span>
+</div>

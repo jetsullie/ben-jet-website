@@ -3,5 +3,5 @@ interface Props { class?: string; size?: string; }
 const { class: className = '', size } = Astro.props;
 ---
 <svg class:list={['site-plus', className]} viewBox="0 0 26 26" aria-hidden="true" focusable="false" style={`display:inline-block;width:1em;height:1em;flex-shrink:0;vertical-align:-.15em;fill:none;stroke:currentColor;stroke-width:4;stroke-linecap:round;${size ? `font-size:${size}` : ''}`}>
-  <path d="M13 3V23M3 13H23" />
+  <path class="plus-vertical" d="M13 3V23" /><path d="M3 13H23" />
 </svg>

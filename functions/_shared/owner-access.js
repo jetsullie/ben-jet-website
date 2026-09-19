@@ -1,6 +1,6 @@
 import cloudflareAccessPlugin from '@cloudflare/pages-plugin-cloudflare-access';
 
-const AUTHORIZED_EMAIL = 'jetsullivan1@gmail.com';
+import { isAuthorizedAdmin } from './admin-identity.js';
 
 export const requireOwner = async (context) => {
   const domain = typeof context.env.CF_ACCESS_DOMAIN === 'string' ? context.env.CF_ACCESS_DOMAIN.trim().replace(/\/+$/, '') : '';
@@ -10,8 +10,8 @@ export const requireOwner = async (context) => {
   }
   const validateAccess = cloudflareAccessPlugin({ domain, aud });
   return validateAccess({ ...context, next: async () => {
-    const email = context.data.cloudflareAccess?.JWT?.payload?.email?.toLowerCase();
-    if (email !== AUTHORIZED_EMAIL) return new Response('Forbidden', { status: 403 });
+    const email = context.data.cloudflareAccess?.JWT?.payload?.email;
+    if (!isAuthorizedAdmin(email)) return new Response('Forbidden', { status: 403 });
     if (!['GET', 'HEAD', 'OPTIONS'].includes(context.request.method)) {
       const origin = context.request.headers.get('Origin');
       if (origin !== new URL(context.request.url).origin) return new Response('Forbidden', { status: 403 });
