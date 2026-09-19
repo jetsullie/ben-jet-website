@@ -3,7 +3,8 @@ import cloudflareAccessPlugin from '@cloudflare/pages-plugin-cloudflare-access';
 import { isAuthorizedAdmin } from './admin-identity.js';
 
 export const requireOwner = async (context) => {
-  const domain = typeof context.env.CF_ACCESS_DOMAIN === 'string' ? context.env.CF_ACCESS_DOMAIN.trim().replace(/\/+$/, '') : '';
+  const rawDomain = context.env.CF_ACCESS_DOMAIN || context.env.CF_ACCESS_TEAM_DOMAIN;
+  const domain = typeof rawDomain === 'string' ? rawDomain.trim().replace(/\/+$/, '') : '';
   const aud = typeof context.env.CF_ACCESS_AUD === 'string' ? context.env.CF_ACCESS_AUD.trim() : '';
   if (!/^https:\/\/[a-z0-9-]+\.cloudflareaccess\.com$/i.test(domain) || aud.length < 10) {
     return new Response('Admin authentication is not configured.', { status: 503, headers: { 'Cache-Control': 'no-store' } });
@@ -11,7 +12,7 @@ export const requireOwner = async (context) => {
   const validateAccess = cloudflareAccessPlugin({ domain, aud });
   return validateAccess({ ...context, next: async () => {
     const email = context.data.cloudflareAccess?.JWT?.payload?.email;
-    if (!isAuthorizedAdmin(email)) return new Response('Forbidden', { status: 403 });
+    if (!isAuthorizedAdmin(email, context.env.CF_ACCESS_ADMIN_EMAILS)) return new Response('Forbidden', { status: 403 });
     if (!['GET', 'HEAD', 'OPTIONS'].includes(context.request.method)) {
       const origin = context.request.headers.get('Origin');
       if (origin !== new URL(context.request.url).origin) return new Response('Forbidden', { status: 403 });

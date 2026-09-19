@@ -1,8 +1,18 @@
 // Only consult this policy after Cloudflare Access has verified the JWT.
-const AUTHORIZED_EMAILS = new Set([
+const DEFAULT_AUTHORIZED_EMAILS = [
   'jetsullivan1@gmail.com',
   'benstapleton06@gmail.com',
-]);
+];
 
-export const isAuthorizedAdmin = (email) =>
-  typeof email === 'string' && AUTHORIZED_EMAILS.has(email.toLowerCase());
+const configuredEmails = (value) => typeof value === 'string'
+  ? value.split(',').map((email) => email.trim().toLowerCase()).filter(Boolean)
+  : [];
+
+export const isAuthorizedAdmin = (email, configured = '') => {
+  if (typeof email !== 'string') return false;
+  const authorizedEmails = new Set([
+    ...DEFAULT_AUTHORIZED_EMAILS,
+    ...configuredEmails(configured),
+  ]);
+  return authorizedEmails.has(email.toLowerCase());
+};

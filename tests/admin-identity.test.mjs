@@ -15,3 +15,8 @@ test('other identities, lookalikes, and missing or malformed claims are denied',
     assert.equal(isAuthorizedAdmin(email), false);
   }
 });
+
+test('configured administrator emails are accepted without changing the code allowlist', () => {
+  assert.equal(isAuthorizedAdmin('owner@example.com', 'OWNER@example.com, other@example.com'), true);
+  assert.equal(isAuthorizedAdmin('unknown@example.com', 'OWNER@example.com, other@example.com'), false);
+});

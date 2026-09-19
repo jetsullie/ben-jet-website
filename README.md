@@ -38,7 +38,7 @@ The editor reuses the Jet Sullivan site's media-entry API, validation, attachmen
 
 The server-side allowlist permits only `jetsullivan1@gmail.com` and `benstapleton06@gmail.com`, after verification of the Cloudflare Access token. This email is used for Ben's private admin identity; it is not added to the public contact page.
 
-Deployment setup still needs a Cloudflare Access policy allowing these same two exact identities for `/admin` and `/admin/*`, MFA enforcement, and valid `CF_ACCESS_DOMAIN` and `CF_ACCESS_AUD` bindings. Verify protection on every deployed hostname and preview before enabling publishing. Updating this repository does not change the Cloudflare dashboard policy. Missing authentication configuration continues to deny access.
+Deployment setup still needs a Cloudflare Access application covering `/admin` and `/admin/*`, with an Allow policy for the intended email addresses and MFA enforcement. Add the Access team domain as the Pages variable `CF_ACCESS_DOMAIN` (or `CF_ACCESS_TEAM_DOMAIN`) and the application audience tag as `CF_ACCESS_AUD`. To add another owner without a code change, set `CF_ACCESS_ADMIN_EMAILS` to a comma-separated list of exact email addresses; the two defaults above remain authorized. Verify protection on every deployed hostname and preview before enabling publishing. Updating this repository does not change the Cloudflare dashboard policy. Missing authentication configuration continues to deny access.
 
 ## Location and contact panels
 
