@@ -1,8 +1,16 @@
 ---
 import GlassShapes from '../components/common/GlassShapes.astro';
 import Layout from '../layouts/Layout.astro';
+import { defaultSettings } from '../../functions/_shared/site-settings';
+import { contactHref } from '../scripts/contact-settings';
 import Arrow from '../components/common/Arrow.astro';
 ---
-<Layout title="Let’s talk" description="Start a film or video project with Jet Sullivan and Ben Stapleton in Austin, Texas.">
-<section class="contact-hero wrap"><GlassShapes tone="blue" /><p class="eyebrow">AUSTIN, TEXAS · LET’S CONNECT</p><h1>Your next story<br /><span>starts here.</span></h1><p class="intro-copy">A wedding, an interview, a documentary, or an idea still taking shape. Tell us what you have in mind.</p><div class="contact-grid"><article class="contact-card"><span class="eyebrow">01 / JET</span><h2>Jet Sullivan</h2><p>Talk with Jet about your project.</p><a class="button yellow contact-cta" href="mailto:contact@jetsullivan.com">Email Jet <Arrow /></a><a class="email-address" href="mailto:contact@jetsullivan.com">contact@jetsullivan.com</a></article><article class="contact-card"><span class="eyebrow">02 / BEN</span><h2>Ben Stapleton</h2><p>To reach Ben, get in touch through Jet for now.</p><a class="button blue contact-cta" href="mailto:contact@jetsullivan.com?subject=Project%20inquiry%20for%20Ben%20Stapleton">Connect with Ben via Jet <Arrow /></a><span class="email-address">Direct contact details coming soon.</span></article></div><div class="contact-note"><span class="eyebrow">A GOOD PLACE TO START</span><p>Share a little about your project, your date or timeline, where it’s happening, and your budget if you have one. We’ll take it from there.</p></div></section>
+<Layout title="Let’s talk" description="Start a film or video project with Jet Sullivan and Ben Stapleton together.">
+<section class="contact-hero wrap"><GlassShapes tone="blue" /><p class="eyebrow"><span data-site-location>Austin, Texas</span> · LET’S CONNECT</p><h1 class="story-heading">Let’s <span class="attention-ink" data-attention>TELL YOUR<br />STORY</span></h1><p class="intro-copy">A wedding, an interview, a documentary, or an idea still taking shape. Tell us what you have in mind.</p><div class="contact-grid">{Object.entries(defaultSettings.contacts).map(([id, contact], index) => <article class="contact-card customizable-contact" id={id} data-contact-panel={id} style={`--contact-accent:${contact.color};--contact-ink:#000000`}>
+<span class="eyebrow">{String(index + 1).padStart(2, '0')} / {id.toUpperCase()}</span><h2 data-contact-field="name">{contact.name}</h2><p data-contact-field="description">{contact.description}</p>
+<a class="button contact-cta" data-contact-action href={contactHref(contact)}><span data-contact-field="buttonLabel">{contact.buttonLabel}</span><Arrow /></a>
+<a class="email-address" data-contact-field="email" href={`mailto:${contact.email}`}>{contact.email}</a>
+<a class="email-address" data-contact-field="phone" hidden={!contact.phone} href={`tel:${contact.phone}`}>{contact.phone}</a>
+<a class="email-address" data-contact-field="website" hidden={!contact.website} href={contact.website}>{contact.website}</a>
+</article>)}</div><div class="contact-note"><span class="eyebrow">A GOOD PLACE TO START</span><p>Share a little about your project, your date or timeline, where it’s happening, and your budget if you have one. We’ll take it from there.</p></div></section>
 </Layout>

@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {onRequestPut,onRequestGet} from '../functions/admin/api/about/[person].js';
+const document={version:1,blocks:[{type:'heading2',align:'left',content:[{text:'My story',bold:true}]},{type:'paragraph',align:'left',content:[{text:'Watch my work',link:'https://example.com/'}]}]};
+const request=doc=>new Request('https://site.test/admin/api/about/jet',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({document:doc})});
+test('each profile saves independently and preserves formatting',async()=>{const data=new Map();const env={CONTENT_KV:{get:async k=>data.has(k)?JSON.parse(data.get(k)):null,put:async(k,v)=>data.set(k,v)}};
+assert.equal((await onRequestPut({env,params:{person:'jet'},request:request(document)})).status,200);
+assert.deepEqual((await(await onRequestGet({env,params:{person:'jet'}})).json()).about.document,document);
+assert.equal((await(await onRequestGet({env,params:{person:'ben'}})).json()).about,null);
+});
+test('rejects unsafe links, excessive text, and unknown people',async()=>{const env={CONTENT_KV:{put:async()=>assert.fail('must not write invalid content')}};const invalid=structuredClone(document);invalid.blocks[1].content[0].link='javascript:alert(1)';assert.equal((await onRequestPut({env,params:{person:'jet'},request:request(invalid)})).status,400);const long=structuredClone(document);long.blocks[0].content[0].text='x'.repeat(5001);assert.equal((await onRequestPut({env,params:{person:'jet'},request:request(long)})).status,400);assert.equal((await onRequestPut({env,params:{person:'other'},request:request(document)})).status,404);});

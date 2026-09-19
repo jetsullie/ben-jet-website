@@ -1,0 +1,41 @@
+---
+import { defaultSettings } from '../../functions/_shared/site-settings';
+import Arrow from './common/Arrow.astro';
+---
+<section class="settings-admin" aria-labelledby="settings-title">
+  <p class="eyebrow">LOCATION & CONTACT</p><h2 id="settings-title">Make it yours.</h2>
+  <p>Update your shared base and public contact panels. These details don’t change who can sign in to admin.</p>
+  <form id="site-settings-form">
+    <fieldset disabled id="settings-fields">
+      <label class="settings-location">Where we’re based<input name="location" maxlength="100" value={defaultSettings.location} required /><small>Shown throughout the site.</small></label>
+      <div class="settings-people">{Object.entries(defaultSettings.contacts).map(([id,contact])=><div class="settings-person">
+        <h3>{id === 'jet' ? 'Jet’s panel' : 'Ben’s panel'}</h3>
+        <label>Display name<input name={`${id}.name`} value={contact.name} maxlength="80" required /></label>
+        <label>Short introduction<textarea name={`${id}.description`} maxlength="350">{contact.description}</textarea></label>
+        <label>Public email<input name={`${id}.email`} type="email" value={contact.email} maxlength="254" /></label>
+        <label>Phone (optional)<input name={`${id}.phone`} type="tel" maxlength="40" /></label>
+        <label>Website (optional)<input name={`${id}.website`} type="url" placeholder="https://" maxlength="2048" /></label>
+        <label>Contact button label<input name={`${id}.buttonLabel`} value={contact.buttonLabel} maxlength="60" required /></label>
+        <small>The button opens your email first, then your website or phone if no email is set.</small>
+        <label class="settings-color">Panel color<input type="color" name={`${id}.color`} value={contact.color} /></label>
+        <p class="eyebrow">LIVE PREVIEW</p>
+        <article class="customizable-contact settings-preview" data-settings-preview={id}>
+          <h3 data-contact-field="name">{contact.name}</h3><p data-contact-field="description">{contact.description}</p>
+          <a class="button contact-cta" data-contact-action href="#" tabindex="-1"><span data-contact-field="buttonLabel">{contact.buttonLabel}</span><Arrow /></a>
+          <a data-contact-field="email" tabindex="-1"></a><a data-contact-field="phone" tabindex="-1"></a><a data-contact-field="website" tabindex="-1"></a>
+        </article>
+      </div>)}</div>
+      <div class="settings-actions"><button class="button contact-cta" type="submit">Save location & contact</button><button class="button" type="button" id="settings-reset">Discard changes</button></div>
+    </fieldset>
+    <output id="settings-status" aria-live="polite">Loading settings…</output>
+  </form>
+</section>
+<script>import '../scripts/settings-admin';</script>
+<style>
+.settings-admin{margin:28px 0;padding:clamp(24px,4vw,48px);border:1px solid #ffffff30;background:var(--black)}
+.settings-admin h2{font-size:clamp(2rem,4vw,3.4rem)}.settings-admin>p{max-width:680px}
+fieldset{padding:0;border:0;min-width:0}fieldset:disabled{opacity:.55}.settings-location{max-width:550px;margin-bottom:32px}
+label{display:grid;gap:9px;margin-bottom:18px;font-weight:700}input,textarea{width:100%;min-width:0;padding:13px;border:1px solid #ffffff55;border-radius:10px;background:var(--gray);color:white;font:inherit}textarea{resize:vertical;min-height:90px}
+small{font-size:12px;font-weight:400;line-height:1.5;color:#ddd}.settings-people{display:grid;grid-template-columns:1fr 1fr;gap:32px}.settings-person{min-width:0}.settings-color{margin-top:20px}input[type=color]{height:48px;padding:5px;max-width:140px;cursor:pointer}.settings-preview{padding:24px;border-radius:18px;margin-top:12px;overflow-wrap:anywhere}.settings-preview a{display:block;margin-top:14px}.settings-preview .button{display:flex}.settings-actions{display:flex;flex-wrap:wrap;gap:15px;margin:30px 0 18px}.settings-actions button{cursor:pointer;font:inherit}.settings-actions button:disabled{cursor:wait}output{display:block;line-height:1.5}
+@media(max-width:750px){.settings-people{grid-template-columns:1fr}}
+</style>

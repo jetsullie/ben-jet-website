@@ -2,15 +2,14 @@
 import GlassShapes from '../components/common/GlassShapes.astro';
 import Layout from '../layouts/Layout.astro';
 import Arrow from '../components/common/Arrow.astro';
-import Plus from '../components/common/Plus.astro';
 import GearCollection from '../components/GearCollection.astro';
 ---
-<Layout title="Two filmmakers. One shared vision." description="Jet Sullivan and Ben Stapleton. Austin, Texas filmmakers creating wedding films, corporate interviews, documentaries, and more.">
+<Layout title="Two filmmakers. One shared vision." description="Jet Sullivan and Ben Stapleton. Filmmakers creating wedding films, corporate interviews, documentaries, and more.">
   <section class="split-hero section-shell" data-motion-bounds>
     <div class="split-side split-mono" aria-hidden="true"></div>
     <div class="split-side split-white" aria-hidden="true"></div>
     <GlassShapes tone="pink" /><div class="home-hero wrap">
-      <div class="hero-topline"><span class="eyebrow"><i class="location-dot"></i> AUSTIN, TEXAS · FILM & VIDEO</span><span class="small-label">TWO FILMMAKERS. ONE SHARED VISION.</span></div>
+      <div class="hero-topline"><span class="eyebrow"><i class="location-dot"></i> <span data-site-location>Austin, Texas</span> · FILM & VIDEO</span><span class="small-label">TWO FILMMAKERS. ONE SHARED VISION.</span></div>
       <div class="split-title">
         <h1 class="team-name" aria-label="Jet × Ben"><span aria-hidden="true"><span class="title-letter">J</span><span class="title-letter">E</span><span class="title-letter">T</span></span><b class="title-letter" aria-hidden="true">×</b><span aria-hidden="true"><span class="title-letter">B</span><span class="title-letter">E</span><span class="title-letter">N</span></span></h1>
       </div>
@@ -26,11 +25,7 @@ import GearCollection from '../components/GearCollection.astro';
   <section class="services-section section-shell"><GlassShapes tone="blue" />
     <div class="services wrap" aria-labelledby="services-heading">
       <div class="section-intro" data-motion-depth="scene"><p class="eyebrow dark-eyebrow">WHAT WE CREATE</p><h2 id="services-heading">Your story.<br />Our <span class="attention-ink" data-attention>FULL<br />ATTENTION</span></h2><p>From a once-in-a-lifetime day to an idea that deserves to be heard, we bring a thoughtful eye to every project.</p><a class="button contact-cta work-cta" href="/previous-work/">Previous work <Arrow /></a></div>
-      <div class="service-list" data-motion-depth="counter">
-        <article id="weddings"><span>01</span><div><h3>Wedding videography</h3><p>The big feelings and the small, in-between moments. Wedding films that bring you right back.</p></div><span class="service-mark" aria-hidden="true"><Plus /></span></article>
-        <article id="interviews"><span>02</span><div><h3>Corporate interviews</h3><p>Put people at the heart of your business. Clear, personal interviews that give your team and ideas a voice.</p></div><span class="service-mark" aria-hidden="true"><Plus /></span></article>
-        <article id="documentaries"><span>03</span><div><h3>Documentaries & more</h3><p>Real stories, told with curiosity and care. Have something else in mind? We’d love to hear it.</p></div><span class="service-mark" aria-hidden="true"><Plus /></span></article>
-      </div>
+      <a class="button contact-cta about-cta" href="/about/">About us <Arrow /></a>
     </div>
   </section>
 
@@ -41,21 +36,9 @@ import GearCollection from '../components/GearCollection.astro';
   <section class="team-band contact-band section-shell" id="contact" aria-labelledby="contact-heading"><GlassShapes tone="blue" />
     <div class="team-section wrap">
       <p class="eyebrow" data-motion-depth="counter">THE PEOPLE BEHIND THE CAMERA</p>
-      <div class="team-copy"><h2 id="contact-heading">Contact<br /><span class="contact-wordmark attention-ink" data-attention aria-label="Ben and Jet">BEN <span class="wordmark-cross">×</span> JET</span></h2><div data-motion-depth="deep"><p>We’re Jet and Ben, based in Austin, Texas. We work together to bring a personal approach to film and video, from the first conversation to the finished story.</p><a class="button contact-cta" href="/contact/">Let’s make something <Arrow /></a></div></div>
+      <div class="team-copy"><h2 id="contact-heading">Contact<br /><span class="contact-wordmark attention-ink" data-attention aria-label="Ben and Jet">BEN <span class="wordmark-cross">×</span> JET</span></h2><div data-motion-depth="deep"><p>We’re Jet and Ben, based in <span data-site-location>Austin, Texas</span>. We work together to bring a personal approach to film and video, from the first conversation to the finished story.</p><a class="button contact-cta" href="/contact/">Let’s make something <Arrow /></a></div></div>
     </div>
   </section>
 
   <section class="closing-band section-shell"><GlassShapes tone="pink" /><div class="closing wrap" data-motion-depth="scene"><p class="eyebrow dark-eyebrow">READY WHEN YOU ARE</p><h2>Let’s talk!</h2><a class="button contact-cta" href="/contact/">Start a project <Arrow /></a></div></section>
 </Layout>
-
-<script>
-  // A single entrance glint draws attention without continuous flashing.
-  const attentionObserver = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      entry.target.classList.add('attention-visible');
-      attentionObserver.unobserve(entry.target);
-    }
-  }, { threshold: .7 });
-  document.querySelectorAll('[data-attention]').forEach(element => attentionObserver.observe(element));
-</script>

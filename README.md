@@ -39,3 +39,7 @@ The editor reuses the Jet Sullivan site's media-entry API, validation, attachmen
 The server-side allowlist permits only `jetsullivan1@gmail.com` and `benstapleton06@gmail.com`, after verification of the Cloudflare Access token. This email is used for Ben's private admin identity; it is not added to the public contact page.
 
 Deployment setup still needs a Cloudflare Access policy allowing these same two exact identities for `/admin` and `/admin/*`, MFA enforcement, and valid `CF_ACCESS_DOMAIN` and `CF_ACCESS_AUD` bindings. Verify protection on every deployed hostname and preview before enabling publishing. Updating this repository does not change the Cloudflare dashboard policy. Missing authentication configuration continues to deny access.
+
+## Location and contact panels
+
+The admin **Location & Contact** section edits the shared location plus each person's public display name, introduction, email, phone, website, button label, and panel color. It includes live previews and automatically selects contrasting text. Saving persists one validated settings document at `team-site:settings` in `CONTENT_KV`. Public pages read `/api/settings`; authenticated editing uses `/admin/api/settings`. Public contact edits do not modify the admin identity allowlist. Empty email/phone/website fields are hidden; at least one contact method is required. The main contact button prefers email, then website, then phone. Defaults remain available if the public settings request fails.

@@ -4,6 +4,20 @@
   const layers = Array.from(document.querySelectorAll<HTMLElement>('.glass-shapes')).map(element => ({
     element, section: element.parentElement!, top: 0, height: 0, current: 0,
   }));
+  // Animate coherent groups once, never stack transforms on nested text/buttons.
+  const candidates = Array.from(document.querySelectorAll<HTMLElement>([
+    '.site-header .wordmark', '.site-header nav', '.hero-topline', '.split-title',
+    '.story-tabs', '.hero-bottom > p', '.services', '.team-section', '.gear-section',
+    '.closing', '.contact-hero > .eyebrow', '.contact-hero > h1', '.contact-hero > .intro-copy',
+    '.contact-grid', '.contact-note', '.work-intro', '.work-collections',
+    '.about-content', '.about-admin', '.team-footer > *', '.admin-header', '.work-admin', '.admin-panel', '.settings-admin',
+  ].join(',')));
+  const groups = candidates.filter(element => !candidates.some(parent => parent !== element && parent.contains(element)))
+    .map(element => {
+      element.dataset.parallaxGroup = '';
+      return { element, top: 0, height: 0, x: 0, y: 0 };
+    });
+  let divideCenter = 0;
   const hero = document.querySelector<HTMLElement>('.split-hero');
   const cross = document.querySelector<HTMLElement>('.team-name b');
   let frame = 0;
@@ -17,11 +31,18 @@
       layer.top = rect.top + scrollY;
       layer.height = rect.height;
     }
+    for (const group of groups) {
+      const rect = group.element.getBoundingClientRect();
+      group.top = rect.top + scrollY - group.y;
+      group.height = rect.height;
+    }
     if (hero && cross) {
       const bounds = hero.getBoundingClientRect();
       const mark = cross.getBoundingClientRect();
       hero.style.setProperty('--divide-height', `${bounds.height}px`);
-      hero.style.setProperty('--divide-y', `${mark.top + mark.height / 2 - bounds.top}px`);
+      const titleShift = groups.find(group => group.element.classList.contains('split-title'))?.y || 0;
+      divideCenter = mark.top + mark.height / 2 - bounds.top - titleShift;
+      hero.style.setProperty('--divide-y', `${divideCenter + titleShift}px`);
     }
     schedule();
   };
@@ -42,7 +63,26 @@
       layer.element.style.setProperty('--glass-scroll', `${layer.current.toFixed(2)}px`);
       layer.element.style.setProperty('--glass-x', `${currentX.toFixed(2)}px`);
       layer.element.style.setProperty('--glass-y', `${currentY.toFixed(2)}px`);
-      layer.section.style.setProperty('--content-shift', `${(disabled ? 0 : -layer.current * .1).toFixed(2)}px`);
+
+    }
+    for (const group of groups) {
+      const nearViewport = group.top < scrollY + innerHeight + 120 && group.top + group.height > scrollY - 120;
+      if (!nearViewport && !disabled) continue;
+      // Hold controls steady while visitors click, type, or use the keyboard.
+      const interacting = group.element.matches(':focus-within') || (finePointer.matches && group.element.matches(':hover'));
+      const distance = scrollY + innerHeight / 2 - (group.top + group.height / 2);
+      const strength = finePointer.matches ? 1 : .6;
+      const targetY = disabled ? 0 : interacting ? group.y : (clamp(-distance * .018, 9) + currentY * .18) * strength;
+      const targetX = disabled ? 0 : interacting ? group.x : currentX * .2;
+      group.y = disabled ? 0 : group.y + (targetY - group.y) * amount;
+      group.x = disabled ? 0 : group.x + (targetX - group.x) * amount;
+      if (Math.abs(targetY - group.y) + Math.abs(targetX - group.x) > .025) unsettled = true;
+      group.element.style.setProperty('--parallax-x', `${group.x.toFixed(2)}px`);
+      group.element.style.setProperty('--parallax-y', `${group.y.toFixed(2)}px`);
+      if (hero && group.element.classList.contains('split-title')) {
+        hero.style.setProperty('--divide-y', `${divideCenter + group.y}px`);
+        hero.style.setProperty('--divide-x', `${group.x}px`);
+      }
     }
     if (unsettled) frame = requestAnimationFrame(tick);
     else lastTime = 0;
@@ -58,6 +98,8 @@
     pointerY = (event.clientY / innerHeight - .5) * 12;
     schedule();
   }, { passive: true });
+  document.addEventListener('focusin', schedule);
+  document.addEventListener('focusout', schedule);
   document.documentElement.addEventListener('mouseleave', () => { pointerX = pointerY = 0; schedule(); });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
@@ -67,6 +109,8 @@
   finePointer.addEventListener('change', () => { pointerX = pointerY = 0; schedule(); });
   const observer = new ResizeObserver(measure);
   layers.forEach(layer => observer.observe(layer.section));
+  groups.forEach(group => observer.observe(group.element));
+  observer.observe(document.body);
   if (cross) observer.observe(cross);
   void document.fonts.ready.then(measure);
   measure();

@@ -4,21 +4,28 @@ import Arrow from '../components/common/Arrow.astro';
 import PageMotion from '../components/common/PageMotion.astro';
 import '../styles/site.css';
 const { title, description } = Astro.props;
+const isHome = Astro.url.pathname === '/';
+const siteName = 'Jet x Ben Film and Video';
+const searchTitle = isHome ? siteName : `${title} — ${siteName}`;
+const websiteSchema = { '@context': 'https://schema.org', '@type': 'WebSite', name: siteName, alternateName: 'Jet x Ben', url: Astro.site?.href };
 ---
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>{title} — Jet Sullivan & Ben Stapleton</title><meta name="description" content={description} />
-<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} /><link rel="icon" href="/brand-center-favicon.png" />
-<meta property="og:title" content={title} /><meta property="og:description" content={description} /><meta property="og:type" content="website" />
+<title>{isHome ? "Jet x Ben" : `${title} — Jet x Ben`}</title><meta name="description" content={description} />
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} /><link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96" /><link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" /><link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta property="og:title" content={searchTitle} /><meta property="og:site_name" content={siteName} /><meta name="twitter:title" content={searchTitle} /><meta property="og:description" content={description} /><meta property="og:type" content="website" />
+{isHome && <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />}
 </head>
 <body><a class="skip-link" href="#main">Skip to content</a><div class="site-motion" data-motion-root data-motion-speed="0.8"><Header /><main id="main"><slot /></main>
-<footer class="team-footer"><a class="footer-name" href="/" data-admin-shortcut={Astro.url.pathname === "/" ? "true" : undefined}>Jet Sullivan <span>×</span> Ben Stapleton</a><span>Austin, Texas</span><a class="footer-action" href="/contact/">Let’s make something. <Arrow /></a></footer></div><PageMotion />
+<footer class="team-footer"><a class="footer-name" href="/" data-admin-shortcut={Astro.url.pathname === "/" ? "true" : undefined}>Jet Sullivan <span>×</span> Ben Stapleton</a><span data-site-location>Austin, Texas</span><a class="footer-action" href="/contact/">Let’s make something. <Arrow /></a></footer></div><PageMotion />
 </body>
 </html>
 
 <script>
+  import '../scripts/attention';
   import '../scripts/disclosures';
   import '../scripts/admin-shortcut';
+  import '../scripts/site-settings';
 </script>

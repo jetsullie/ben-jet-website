@@ -6,6 +6,7 @@ const path = Astro.url.pathname;
   <a class="wordmark" href="/" aria-label="Jet Sullivan and Ben Stapleton home">JET <span>×</span> BEN<span class="wordmark-caption">SULLIVAN & STAPLETON</span></a>
   <nav aria-label="Main navigation">
     <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
+    <a href="/about/" aria-current={path.startsWith('/about') ? 'page' : undefined}>About Us</a>
     <a class="nav-work" href="/previous-work/" aria-current={path.startsWith('/previous-work') ? 'page' : undefined}>Previous Work</a>
     <a class="nav-contact contact-cta" href="/contact/" aria-current={path.startsWith('/contact') ? 'page' : undefined}>Let’s talk <Arrow /></a>
   </nav>

@@ -1,0 +1,20 @@
+---
+const tools=[['bold','Bold'],['italic','Italic'],['underline','Underline'],['strikeThrough','Strike'],['insertUnorderedList','• List'],['insertOrderedList','1. List'],['justifyLeft','Left'],['justifyCenter','Center'],['justifyRight','Right'],['unlink','Unlink'],['undo','Undo'],['redo','Redo'],['removeFormat','Clear format']];
+---
+<section class="about-admin" aria-labelledby="about-admin-title">
+<p class="eyebrow">ABOUT US</p><h2 id="about-admin-title">Your own words.</h2><p>Edit and save each biography independently.</p>
+{['jet','ben'].map(person=><form class="bio-form" data-bio-person={person}>
+<h3 id={`${person}-bio-label`}>{person==='jet'?'Jet’s biography':'Ben’s biography'}</h3>
+<fieldset disabled>
+<div class="bio-toolbar" role="group" aria-label={`${person} biography formatting`}>
+<label>Style <select data-bio-format><option value="p">Paragraph</option><option value="h2">Heading</option><option value="h3">Subheading</option><option value="blockquote">Quote</option></select></label>
+{tools.map(([command,label])=><button type="button" data-command={command}>{label}</button>)}
+<button type="button" data-bio-link>Link</button>
+</div>
+<div class="bio-editor biography-content" contenteditable="false" role="textbox" aria-multiline="true" aria-labelledby={`${person}-bio-label`} spellcheck="true"><p></p></div>
+<p class="bio-help">Select text to format it. Pasted text is inserted without formatting. <span data-bio-count>0 / 5000</span></p>
+<div class="bio-actions"><button type="submit" class="button contact-cta">Save biography</button><button type="button" class="button" data-bio-discard>Discard changes</button></div>
+</fieldset><output aria-live="polite">Loading biography…</output>
+</form>)}
+</section>
+<script>import '../scripts/about-admin';</script>
