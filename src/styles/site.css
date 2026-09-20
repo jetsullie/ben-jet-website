@@ -680,3 +680,18 @@ h3{font-size:1.65rem;line-height:1.15}
 .story-heading .attention-ink{--ink-start:#93e9f9;--ink-mid:#fff;--ink-end:#b8f1ff;display:block;margin-top:.1em;font-size:clamp(2.6rem,4.4vw,4.2rem);line-height:1.02;letter-spacing:-.065em}
 @media(max-width:600px){.story-heading .attention-ink{font-size:clamp(2.3rem,10.5vw,3.8rem)}}
 @media(prefers-reduced-motion:reduce){.attention-visible{animation:none}}
+
+/* Let the contact ring extend past the viewport, not stop at the content gutter. */
+.contact-hero .glass-shapes { overflow: visible; }
+.contact-hero .glass-shape--orb {
+  top: -8%;
+  right: calc(50% - 70vw);
+  width: max(560px, 56vw);
+}
+@media(max-width:600px) {
+  .contact-hero .glass-shape--orb {
+    top: 1%;
+    right: calc(50% - 95vw);
+    width: max(360px, 100vw);
+  }
+}
