@@ -775,3 +775,11 @@ h3{font-size:1.65rem;line-height:1.15}
 .gear-category-count{margin-left:auto;flex-shrink:0;font-size:13px;font-weight:700;color:#59635e;font-variant-numeric:tabular-nums}
 .gear-category-group+.gear-category-group{margin-top:44px;padding-top:36px;border-top:1px solid #25252526}
 @media(max-width:600px){.gear-category-header{margin-bottom:20px;padding-left:14px;gap:12px}.gear-category-group+.gear-category-group{margin-top:32px;padding-top:28px}}
+
+/* Keep the dashboard glass present through long editing sessions. */
+.admin-body{overflow-x:clip}
+.admin-main>.glass-shapes{position:fixed;inset:0;opacity:.65}
+.admin-main>.glass-shapes .glass-shape--panel{top:8%;right:-10%;width:min(44vw,650px)}
+.admin-main>.glass-shapes .glass-shape--orb{bottom:-15%;left:-12%;width:min(46vw,680px)}
+.admin-main>.glass-shapes .glass-shape--small{top:58%;right:8%}
+@media(max-width:600px){.admin-main>.glass-shapes{opacity:.4}.admin-main>.glass-shapes .glass-shape--panel{width:70vw}.admin-main>.glass-shapes .glass-shape--orb{width:75vw}}

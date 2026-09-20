@@ -2,7 +2,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
   const layers = Array.from(document.querySelectorAll<HTMLElement>('.glass-shapes')).map(element => ({
-    element, section: element.parentElement!, top: 0, height: 0, current: 0,
+    element, section: element.parentElement!, fixed: element.parentElement!.classList.contains('admin-main'), top: 0, height: 0, current: 0,
   }));
   // Animate coherent groups once, never stack transforms on nested text/buttons.
   const candidates = Array.from(document.querySelectorAll<HTMLElement>([
@@ -15,7 +15,13 @@
   const groups = candidates.filter(element => !candidates.some(parent => parent !== element && parent.contains(element)))
     .map(element => {
       element.dataset.parallaxGroup = '';
-      return { element, anchor: element.querySelector<HTMLElement>('.gear-trigger') || element, top: 0, height: 0, x: 0, y: 0 };
+      const navigation = Boolean(element.closest('.site-header'));
+      const title = element.matches('.split-title, .hero-topline, .work-intro, .admin-header, .contact-hero > h1');
+      return { element, anchor: element.querySelector<HTMLElement>('.gear-trigger') || element,
+        limit: navigation ? 5 : title ? 28 : 20,
+        speed: navigation ? .012 : title ? .055 : .04,
+        pointer: navigation ? .15 : title ? .5 : .32,
+        top: 0, height: 0, x: 0, y: 0 };
     });
   let divideCenter = 0;
   const hero = document.querySelector<HTMLElement>('.split-hero');
@@ -48,7 +54,7 @@
   };
   function tick(time: number) {
     frame = 0;
-    const amount = 1 - Math.exp(-Math.min(time - (lastTime || time - 16), 50) / 145);
+    const amount = 1 - Math.exp(-Math.min(time - (lastTime || time - 16), 50) / 190);
     lastTime = time;
     const disabled = reduced.matches;
     const modalOpen = Boolean(document.querySelector('dialog[open]'));
@@ -59,7 +65,9 @@
     for (const layer of layers) {
       // Stable document coordinates avoid feedback from the animated shapes.
       const distance = scrollY + innerHeight / 2 - (layer.top + layer.height / 2);
-      const target = disabled ? 0 : clamp(distance * .11, 72);
+      const target = disabled ? 0 : layer.fixed
+        ? Math.sin(scrollY / Math.max(innerHeight * 1.5, 1)) * 80
+        : clamp(distance * (finePointer.matches ? .18 : .12), finePointer.matches ? 110 : 72);
       layer.current = disabled ? 0 : layer.current + (target - layer.current) * amount;
       if (Math.abs(target - layer.current) > .025) unsettled = true;
       layer.element.style.setProperty('--glass-scroll', `${layer.current.toFixed(2)}px`);
@@ -67,15 +75,16 @@
       layer.element.style.setProperty('--glass-y', `${currentY.toFixed(2)}px`);
 
     }
+    const hoveredControl = finePointer.matches ? document.querySelector<HTMLElement>('a:hover, button:hover, input:hover, textarea:hover, select:hover, summary:hover, [contenteditable=true]:hover') : null;
     for (const group of groups) {
       const nearViewport = group.top < scrollY + innerHeight + 120 && group.top + group.height > scrollY - 120;
       if (!nearViewport && !disabled) continue;
       // Hold controls steady while visitors click, type, or use the keyboard.
-      const interacting = group.element.matches(':focus-within') || (finePointer.matches && group.element.matches(':hover'));
+      const interacting = group.element.matches(':focus-within') || Boolean(hoveredControl && group.element.contains(hoveredControl));
       const distance = scrollY + innerHeight / 2 - (group.top + group.height / 2);
       const strength = finePointer.matches ? 1 : .6;
-      const targetY = disabled ? 0 : interacting ? group.y : (clamp(-distance * .018, 9) + currentY * .18) * strength;
-      const targetX = disabled ? 0 : interacting ? group.x : currentX * .2;
+      const targetY = disabled ? 0 : interacting ? group.y : (clamp(-distance * group.speed, group.limit) + currentY * group.pointer) * strength;
+      const targetX = disabled ? 0 : interacting ? group.x : currentX * group.pointer;
       group.y = disabled ? 0 : group.y + (targetY - group.y) * amount;
       group.x = disabled ? 0 : group.x + (targetX - group.x) * amount;
       if (Math.abs(targetY - group.y) + Math.abs(targetX - group.x) > .025) unsettled = true;
@@ -98,8 +107,8 @@
   addEventListener('resize', measure, { passive: true });
   addEventListener('pointermove', event => {
     if (!finePointer.matches || reduced.matches) return;
-    pointerX = (event.clientX / innerWidth - .5) * 16;
-    pointerY = (event.clientY / innerHeight - .5) * 12;
+    pointerX = (event.clientX / innerWidth - .5) * 24;
+    pointerY = (event.clientY / innerHeight - .5) * 18;
     schedule();
   }, { passive: true });
   document.addEventListener('close', schedule, true);
