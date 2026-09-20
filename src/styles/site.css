@@ -783,3 +783,9 @@ h3{font-size:1.65rem;line-height:1.15}
 .admin-main>.glass-shapes .glass-shape--orb{bottom:-15%;left:-12%;width:min(46vw,680px)}
 .admin-main>.glass-shapes .glass-shape--small{top:58%;right:8%}
 @media(max-width:600px){.admin-main>.glass-shapes{opacity:.4}.admin-main>.glass-shapes .glass-shape--panel{width:70vw}.admin-main>.glass-shapes .glass-shape--orb{width:75vw}}
+
+.gear-value-summary { margin: 0 0 28px; padding: clamp(20px, 4vw, 32px); border: 1px solid #25252526; border-radius: 18px; background: #fff; color: #252525; }
+.gear-value-summary[hidden] { display: none; }
+.gear-value-summary > span { display: block; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.gear-value-summary > strong { display: block; margin: 10px 0; font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.15; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.gear-value-summary > small { display: block; line-height: 1.5; color: #555; }

@@ -102,7 +102,22 @@ document.querySelectorAll<HTMLButtonElement>('[data-owner]').forEach(button => b
 }));
 search.addEventListener('input', render);
 clear.addEventListener('click', () => { search.value = ''; document.querySelector<HTMLButtonElement>('[data-owner=""]')!.click(); });
+
+  const renderGearValue = (summary?: { totalValue: number; valuedItemCount: number; itemCount: number; currency: string }) => {
+    const panel = document.querySelector<HTMLElement>('#gear-value-summary');
+    if (!panel || !summary || !Number.isFinite(summary.totalValue)) return;
+    const amount = panel.querySelector<HTMLElement>('strong')!;
+    const note = panel.querySelector<HTMLElement>('small')!;
+    amount.textContent = summary.valuedItemCount
+      ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(summary.totalValue)
+      : 'Not yet estimated';
+    note.textContent = summary.valuedItemCount < summary.itemCount
+      ? `Based on ${summary.valuedItemCount} of ${summary.itemCount} items. Items without a value are excluded.`
+      : 'Across the entire collection.';
+    panel.hidden = false;
+  };
+
 fetch('/api/gear').then(async response => {
   if (response.status === 404) return { items: [] };
   if (!response.ok) throw new Error('unavailable'); return response.json();
-}).then(data => { if (!Array.isArray(data.items)) throw new Error('invalid'); items = data.items; loaded = true; render(); }).catch(() => { results.replaceChildren(element('p', 'gear-empty', 'Our collection is temporarily unavailable. Please try again shortly.')); });
+}).then(data => { if (!Array.isArray(data.items)) throw new Error('invalid'); items = data.items; renderGearValue(data.summary); loaded = true; render(); }).catch(() => { results.replaceChildren(element('p', 'gear-empty', 'Our collection is temporarily unavailable. Please try again shortly.')); });
