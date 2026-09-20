@@ -1,30 +1,32 @@
 ---
 import DisclosureIcon from './common/DisclosureIcon.astro';
 ---
-
-<details class="gear-disclosure" id="gear" data-disclosure>
-  <summary class="gear-trigger">
-    <span class="gear-trigger-copy"><strong>OUR GEAR</strong></span>
-    <span class="round-arrow" aria-hidden="true"><DisclosureIcon /></span>
-  </summary>
-
-  <div class="gear-collection">
-    <div class="gear-collection-heading" data-motion-depth="scene">
-      <div><p class="eyebrow">THE SHARED KIT</p><h3>OUR GEAR</h3></div>
-      <p>Explore the tools behind our films. Choose a category, then open an item for details and current condition.</p>
-    </div>
-
-    <div class="gear-categories">
-      <p class="gear-empty" style="padding: 28px; margin: 0;">Our gear collection is coming soon.</p>
-    </div>
+<div class="gear-browser">
+  <div class="gear-tools" aria-label="Browse gear" inert>
+    <button type="button" id="gear-filter-toggle" aria-expanded="false" aria-controls="gear-filters"><svg class="gear-tool-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M5 8h22M5 16h22M5 24h22"/><path d="M11 5v6M22 13v6M14 21v6"/></svg><span class="gear-tool-label">Filter</span></button>
+    <button type="button" id="gear-search-toggle" aria-expanded="false" aria-controls="gear-search-box"><svg class="gear-tool-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="14" cy="14" r="9"/><path d="m21 21 7 7"/></svg><span class="gear-tool-label">Search</span></button>
   </div>
-</details>
-
+  <details class="gear-disclosure" id="gear" data-disclosure>
+    <summary class="gear-trigger"><span class="gear-trigger-copy"><strong>OUR GEAR</strong></span><span class="round-arrow" aria-hidden="true"><DisclosureIcon /></span></summary>
+    <div class="gear-collection gear-showcase">
+      <div class="gear-browse-controls">
+        <div class="gear-panel-reveal" data-open="false"><div id="gear-filters" class="gear-filters" inert role="group" aria-label="Filter by owner">
+          <button type="button" data-owner="" aria-pressed="true">All gear</button>
+          <button type="button" data-owner="Jet Sullivan" aria-pressed="false">Jet’s gear</button>
+          <button type="button" data-owner="Ben Stapleton" aria-pressed="false">Ben’s gear</button>
+          <small>Shared items appear in both collections.</small>
+        </div>
+        </div><div class="gear-panel-reveal" data-open="false"><div id="gear-search-box" class="gear-search-box" inert><label for="gear-search">Find your gear</label><input type="search" id="gear-search" placeholder="Search gear or categories…" autocomplete="off" /></div></div>
+        <div class="gear-results-heading"><p>Explore the tools behind our films.</p><span id="gear-result-count" role="status"></span><button type="button" id="gear-clear" hidden>Clear filters</button></div>
+      </div>
+      <div id="gear-results" class="gear-results"><p class="gear-empty">Loading our collection…</p></div>
+    </div>
+  </details>
+</div>
+<dialog id="gear-detail" class="gear-detail" aria-labelledby="gear-detail-title">
+  <button type="button" class="gear-detail-close" aria-label="Close gear details" autofocus>Close <span aria-hidden="true">×</span></button>
+  <div class="gear-detail-layout"><div class="gear-detail-image"></div><div class="gear-detail-copy"><p class="eyebrow" id="gear-detail-category"></p><h2 id="gear-detail-title"></h2><dl class="gear-detail-facts"></dl><h3>About this gear</h3><p class="gear-detail-description"></p><section class="gear-detail-kit"><h3>What’s included</h3><ul></ul></section></div></div>
+</dialog>
 <script>
-  type GearItem = { id:string; name:string; category:string; owner?:string; rating:number; description:string; kitParts:string[]; imageUrl?:string|null; imageAlt?:string|null };
-  const categories=document.querySelector<HTMLElement>('.gear-categories');
-  const headingCopy=document.querySelector<HTMLElement>('.gear-collection-heading>p');
-  const plus=()=>{const wrap=document.createElement('span');wrap.className='category-arrow';wrap.setAttribute('aria-hidden','true');wrap.innerHTML='<span class="disclosure-icon"><span></span><span></span></span>';return wrap};
-  const renderLive=(items:GearItem[])=>{if(!categories)return;if(!items.length){const empty=document.createElement('p');empty.className='gear-empty';empty.style.cssText='padding:28px;margin:0';empty.textContent='Our gear collection is coming soon.';categories.replaceChildren(empty);return;}const grouped=new Map<string,GearItem[]>();for(const item of items){const category=item.category?.trim()||'Gear';if(!grouped.has(category))grouped.set(category,[]);grouped.get(category)!.push(item)}const fragment=document.createDocumentFragment();[...grouped.entries()].sort(([a],[b])=>a.localeCompare(b)).forEach(([category,group],groupIndex)=>{const section=document.createElement('details');section.className='gear-category';const summary=document.createElement('summary');const index=document.createElement('span');index.className='gear-index';index.textContent=String(groupIndex+1).padStart(2,'0');const title=document.createElement('span');const strong=document.createElement('strong');strong.textContent=category;const small=document.createElement('small');small.textContent=`${group.length} ${group.length===1?'item':'items'}`;title.append(strong,small);summary.append(index,title,plus());const grid=document.createElement('div');grid.className='gear-grid';group.sort((a,b)=>a.name.localeCompare(b.name)).forEach((item,itemIndex)=>{const card=document.createElement('details');card.className='gear-item';const cardSummary=document.createElement('summary');const image=document.createElement('span');image.className='gear-image';if(item.imageUrl){const img=document.createElement('img');img.src=item.imageUrl;img.alt=item.imageAlt||item.name;img.loading='lazy';image.append(img)}else{image.textContent=String(itemIndex+1).padStart(2,'0')}const name=document.createElement('span');name.className='gear-name';const nameStrong=document.createElement('strong');nameStrong.textContent=item.name;const nameSmall=document.createElement('small');nameSmall.textContent='View details';name.append(nameStrong,nameSmall);const icon=plus();icon.className='item-arrow';cardSummary.append(image,name,icon);const details=document.createElement('div');details.className='gear-details';if(item.owner){const owner=document.createElement('p');owner.className='gear-owner';owner.textContent=`Owned by ${item.owner}`;details.append(owner)}const condition=document.createElement('div');condition.className='condition';const conditionLabel=document.createElement('span');conditionLabel.textContent='Current condition';const conditionValue=document.createElement('strong');conditionValue.textContent=`${Number(item.rating).toFixed(1)} / 5`;condition.append(conditionLabel,conditionValue);const description=document.createElement('p');description.textContent=item.description;details.append(condition,description);if(item.kitParts?.length){const h4=document.createElement('h4');h4.textContent='What’s in the kit';const ul=document.createElement('ul');item.kitParts.forEach(part=>{const li=document.createElement('li');li.textContent=part;ul.append(li)});details.append(h4,ul)}card.append(cardSummary,details);grid.append(card)});section.append(summary,grid);fragment.append(section)});categories.replaceChildren(fragment);if(headingCopy)headingCopy.textContent='Choose a category, then open an item for details and current condition. Explore the tools behind our films.'};
-  fetch('/api/gear').then(response=>response.ok?response.json():null).then(result=>{if(Array.isArray(result?.items))renderLive(result.items)}).catch(()=>{});
+  import '../scripts/gear-public';
 </script>

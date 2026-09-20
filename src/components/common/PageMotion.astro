@@ -15,7 +15,7 @@
   const groups = candidates.filter(element => !candidates.some(parent => parent !== element && parent.contains(element)))
     .map(element => {
       element.dataset.parallaxGroup = '';
-      return { element, top: 0, height: 0, x: 0, y: 0 };
+      return { element, anchor: element.querySelector<HTMLElement>('.gear-trigger') || element, top: 0, height: 0, x: 0, y: 0 };
     });
   let divideCenter = 0;
   const hero = document.querySelector<HTMLElement>('.split-hero');
@@ -32,7 +32,7 @@
       layer.height = rect.height;
     }
     for (const group of groups) {
-      const rect = group.element.getBoundingClientRect();
+      const rect = group.anchor.getBoundingClientRect();
       group.top = rect.top + scrollY - group.y;
       group.height = rect.height;
     }
@@ -51,6 +51,8 @@
     const amount = 1 - Math.exp(-Math.min(time - (lastTime || time - 16), 50) / 145);
     lastTime = time;
     const disabled = reduced.matches;
+    const modalOpen = Boolean(document.querySelector('dialog[open]'));
+    if (modalOpen && !disabled) { lastTime = 0; return; }
     currentX += ((disabled ? 0 : pointerX) - currentX) * amount;
     currentY += ((disabled ? 0 : pointerY) - currentY) * amount;
     let unsettled = Math.abs(currentX - pointerX) + Math.abs(currentY - pointerY) > .01 && !disabled;
@@ -58,7 +60,7 @@
       // Stable document coordinates avoid feedback from the animated shapes.
       const distance = scrollY + innerHeight / 2 - (layer.top + layer.height / 2);
       const target = disabled ? 0 : clamp(distance * .11, 72);
-      layer.current += (target - layer.current) * amount;
+      layer.current = disabled ? 0 : layer.current + (target - layer.current) * amount;
       if (Math.abs(target - layer.current) > .025) unsettled = true;
       layer.element.style.setProperty('--glass-scroll', `${layer.current.toFixed(2)}px`);
       layer.element.style.setProperty('--glass-x', `${currentX.toFixed(2)}px`);
@@ -77,6 +79,8 @@
       group.y = disabled ? 0 : group.y + (targetY - group.y) * amount;
       group.x = disabled ? 0 : group.x + (targetX - group.x) * amount;
       if (Math.abs(targetY - group.y) + Math.abs(targetX - group.x) > .025) unsettled = true;
+      group.element.style.setProperty('--glass-light-x', `${(50 + (disabled ? 0 : currentX * 3)).toFixed(2)}%`);
+      group.element.style.setProperty('--glass-light-y', `${(30 + (disabled ? 0 : currentY * 3)).toFixed(2)}%`);
       group.element.style.setProperty('--parallax-x', `${group.x.toFixed(2)}px`);
       group.element.style.setProperty('--parallax-y', `${group.y.toFixed(2)}px`);
       if (hero && group.element.classList.contains('split-title')) {
@@ -98,6 +102,7 @@
     pointerY = (event.clientY / innerHeight - .5) * 12;
     schedule();
   }, { passive: true });
+  document.addEventListener('close', schedule, true);
   document.addEventListener('focusin', schedule);
   document.addEventListener('focusout', schedule);
   document.documentElement.addEventListener('mouseleave', () => { pointerX = pointerY = 0; schedule(); });
