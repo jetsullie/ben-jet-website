@@ -62,9 +62,12 @@ function render() {
     const heading = element('h3', '', category);
     heading.id = `gear-category-${index}`;
     section.setAttribute('aria-labelledby', heading.id);
+    const categoryItems = visible.filter(item => item.category === category).sort((a, b) => a.name.localeCompare(b.name));
+    const header = element('header', 'gear-category-header');
+    header.append(heading, element('span', 'gear-category-count', `${categoryItems.length} ${categoryItems.length === 1 ? 'item' : 'items'}`));
     const grid = element('div', 'gear-card-grid');
-    section.append(heading, grid);
-    for (const item of visible.filter(item => item.category === category).sort((a, b) => a.name.localeCompare(b.name))) {
+    section.append(header, grid);
+    for (const item of categoryItems) {
       const card = element('button', 'gear-preview'); card.type = 'button'; card.setAttribute('aria-haspopup', 'dialog');
       const photo = element('span', 'gear-preview-photo'); photo.append(imageFor(item));
       const copy = element('span', 'gear-preview-copy');

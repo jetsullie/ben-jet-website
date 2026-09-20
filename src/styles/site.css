@@ -750,8 +750,9 @@ h3{font-size:1.65rem;line-height:1.15}
 .gear-browser:has(#gear[data-expanded=true]) .gear-tools{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0);transition-delay:100ms,100ms,0s}
 .gear-panel-reveal{display:grid;grid-template-rows:0fr;opacity:0;margin-bottom:0;visibility:hidden;transition:grid-template-rows 360ms cubic-bezier(.22,1,.36,1),opacity 240ms ease,margin-bottom 360ms cubic-bezier(.22,1,.36,1),visibility 0s linear 360ms}
 .gear-panel-reveal[data-open=true]{grid-template-rows:1fr;opacity:1;margin-bottom:20px;visibility:visible;transition-delay:0s}
-.gear-panel-reveal>.gear-filters,.gear-panel-reveal>.gear-search-box{min-height:0;overflow:hidden;margin-bottom:0}
-.gear-panel-reveal[data-open=true]>.gear-search-box{padding:5px;margin:-5px}
+/* Reserve paint space for glow while the grid still collapses to zero height. */
+.gear-panel-reveal>.gear-filters,.gear-panel-reveal>.gear-search-box{min-height:0;overflow:clip;overflow-clip-margin:36px;margin-bottom:0}
+.gear-browser .gear-showcase{overflow:visible}
 /* Crossfade the pink glass layer; gradients themselves do not interpolate. */
 .gear-browser .gear-tools button,.gear-browser .gear-filters button{position:relative;isolation:isolate;transition:box-shadow 360ms ease,border-color 360ms ease,color 360ms ease}
 .gear-browser .gear-tools button::before,.gear-browser .gear-filters button::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(ellipse at var(--glass-light-x,50%) var(--glass-light-y,30%),#ffffff85,transparent 80%),linear-gradient(125deg,#f8a8c3,#fdbfbf 65%,#ffe1eb);transition:opacity 360ms ease}
@@ -767,3 +768,10 @@ h3{font-size:1.65rem;line-height:1.15}
 .gear-detail-close:hover{color:#a53e67}
 .gear-detail-close:focus-visible{outline:2px solid #a53e67;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.gear-detail-close{transition:none}}
+
+/* A clear, restrained heading separates each type of kit. */
+.gear-category-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding:6px 0 6px 18px;border-left:4px solid var(--pink)}
+.gear-category-header h3{margin:0;font-size:clamp(1.65rem,2.6vw,2.15rem);line-height:1.15;letter-spacing:-.045em;overflow-wrap:anywhere;min-width:0}
+.gear-category-count{margin-left:auto;flex-shrink:0;font-size:13px;font-weight:700;color:#59635e;font-variant-numeric:tabular-nums}
+.gear-category-group+.gear-category-group{margin-top:44px;padding-top:36px;border-top:1px solid #25252526}
+@media(max-width:600px){.gear-category-header{margin-bottom:20px;padding-left:14px;gap:12px}.gear-category-group+.gear-category-group{margin-top:32px;padding-top:28px}}
