@@ -14,9 +14,9 @@ import GearCollection from '../components/GearCollection.astro';
         <h1 class="team-name" aria-label="Jet × Ben"><span aria-hidden="true"><span class="title-letter">J</span><span class="title-letter">E</span><span class="title-letter">T</span></span><b class="title-letter" aria-hidden="true">×</b><span aria-hidden="true"><span class="title-letter">B</span><span class="title-letter">E</span><span class="title-letter">N</span></span></h1>
       </div>
       <nav class="story-tabs" aria-label="What we create" data-motion-depth="deep">
-        <a href="/previous-work/#remember" class="story-tab pink"><span>01 / WEDDINGS</span><strong>Remember</strong><Arrow /></a>
-        <a href="/previous-work/#connect" class="story-tab blue"><span>02 / CORPORATE</span><strong>Connect</strong><Arrow /></a>
-        <a href="/previous-work/#capture" class="story-tab mint"><span>03 / DOCUMENTARY</span><strong>Capture</strong><Arrow /></a>
+        <a href="/previous-work/#remember" class="story-tab pink"><span>01 / WEDDING FILMS</span><strong>Weddings</strong><Arrow /></a>
+        <a href="/previous-work/#connect" class="story-tab blue"><span>02 / INTERVIEWS</span><strong>Corporate</strong><Arrow /></a>
+        <a href="/previous-work/#capture" class="story-tab mint"><span>03 / REAL STORIES</span><strong>Documentary</strong><Arrow /></a>
       </nav>
       <div class="hero-bottom"><p>We’re Jet Sullivan and Ben Stapleton. A filmmaking team capturing real people, meaningful moments, and stories worth sharing.</p></div>
     </div>
@@ -25,7 +25,12 @@ import GearCollection from '../components/GearCollection.astro';
   <section class="services-section section-shell"><GlassShapes tone="blue" />
     <div class="services wrap" aria-labelledby="services-heading">
       <div class="section-intro" data-motion-depth="scene"><p class="eyebrow dark-eyebrow">WHAT WE CREATE</p><h2 id="services-heading">Your story.<br />Our <span class="attention-ink" data-attention>FULL<br />ATTENTION</span></h2><p>From a once-in-a-lifetime day to an idea that deserves to be heard, we bring a thoughtful eye to every project.</p><a class="button contact-cta work-cta" href="/previous-work/">Previous work <Arrow /></a></div>
-      <a class="button contact-cta about-cta" href="/about/">About us <Arrow /></a>
+      <a class="about-cta" href="/about/" aria-labelledby="about-card-title">
+        <span class="eyebrow dark-eyebrow">THE PEOPLE BEHIND THE CAMERA</span>
+        <strong id="about-card-title">About us.</strong>
+        <span class="about-cta-description">Two perspectives. One shared vision. Meet Jet and Ben, the filmmakers behind your next story.</span>
+        <span class="about-cta-footer">Meet the filmmakers <span class="about-cta-arrow"><Arrow /></span></span>
+      </a>
     </div>
   </section>
 
