@@ -55,7 +55,40 @@ import '../styles/site.css';
   let inventory:GearItem[]=[];
   const reset=()=>{editorTitle.textContent='Add gear';form.reset();fields.id.value='';fields.rating.value='5';fields.image.required=true;imageHelp.textContent='JPEG, PNG, WebP, or AVIF. Maximum 15 MB.';submit.textContent='Add gear';cancel.hidden=true};
   const edit=(item:GearItem)=>{editorTitle.textContent='Edit gear';fields.image.value='';fields.id.value=item.id;fields.name.value=item.name;fields.category.value=item.category;fields.owner.value=item.owner||'';fields.rating.value=String(item.rating);fields.imageAlt.value=item.imageAlt||'';fields.description.value=item.description;fields.parts.value=item.kitParts?.join('\n')||'';fields.image.required=!item.imageUrl;imageHelp.textContent=item.imageUrl?'The current photo remains unless you choose a replacement.':'Choose a product photo.';submit.textContent='Update gear';cancel.hidden=false;status.textContent=`Editing “${item.name}”.`;form.scrollIntoView({behavior:'smooth'});fields.name.focus({preventScroll:true})};
-  const render=(allItems:GearItem[])=>{inventory=allItems;const query=inventorySearch.value.trim().toLowerCase();const items=allItems.filter(item=>(!inventoryOwner.value||item.owner?.includes(inventoryOwner.value))&&`${item.name} ${item.category}`.toLowerCase().includes(query));document.querySelector('#admin-gear-count')!.textContent=`${items.length} of ${allItems.length} items`;list.replaceChildren();if(!items.length){const p=document.createElement('p');p.textContent=allItems.length?'No matching gear. Try another search or owner.':'Your collection is empty. Add your first piece of gear above.';list.append(p);return}for(const item of items){const card=document.createElement('article');card.className='admin-gear-card';if(item.imageUrl){const img=document.createElement('img');img.src=item.imageUrl;img.alt=item.imageAlt||item.name;img.loading='lazy';card.append(img)}const copy=document.createElement('div');const category=document.createElement('p');category.className='eyebrow';category.textContent=item.category;const title=document.createElement('h3');title.textContent=item.name;const meta=document.createElement('p');meta.textContent=`${item.owner ? `Owned by ${item.owner} · ` : ''}Condition ${Number(item.rating).toFixed(1)} / 5 · ${item.kitParts?.length||0} parts listed`;const description=document.createElement('p');description.className='gear-admin-excerpt';description.textContent=item.description;const actions=document.createElement('div');actions.className='admin-actions';const editButton=document.createElement('button');editButton.type='button';editButton.className='secondary';editButton.textContent='Edit';editButton.onclick=()=>edit(item);const remove=document.createElement('button');remove.type='button';remove.className='danger';remove.textContent='Delete';remove.onclick=()=>{pending=item;deleteMessage.textContent=`“${item.name}” will be removed from the public collection.`;dialog.showModal()};actions.append(editButton,remove);copy.append(category,title,meta,description,actions);card.append(copy);list.append(card)}};
+  const render = (allItems: GearItem[]) => {
+    inventory = allItems;
+    const query = inventorySearch.value.trim().toLowerCase();
+    const items = allItems.filter(item => (!inventoryOwner.value || item.owner?.includes(inventoryOwner.value)) && `${item.name} ${item.category}`.toLowerCase().includes(query));
+    document.querySelector('#admin-gear-count')!.textContent = `${items.length} of ${allItems.length} items`;
+    list.replaceChildren();
+    if (!items.length) {
+      const empty = document.createElement('p');
+      empty.textContent = allItems.length ? 'No matching gear. Try another search or owner.' : 'Your collection is empty. Add your first piece of gear above.';
+      list.append(empty);
+      return;
+    }
+    for (const item of items) {
+      const card = document.createElement('article'); card.className = 'admin-gear-card';
+      const photo = document.createElement('div'); photo.className = 'inventory-photo';
+      if (item.imageUrl) {
+        const img = document.createElement('img'); img.src = item.imageUrl; img.alt = item.imageAlt || item.name; img.loading = 'lazy'; photo.append(img);
+      } else { photo.textContent = 'No photo'; }
+      const copy = document.createElement('div'); copy.className = 'inventory-copy';
+      const category = document.createElement('p'); category.className = 'eyebrow'; category.textContent = item.category;
+      const title = document.createElement('h3'); title.textContent = item.name;
+      const meta = document.createElement('dl'); meta.className = 'inventory-facts';
+      for (const [label, value] of [['Owner', item.owner || 'Not specified'], ['Condition', `${Number(item.rating).toFixed(1)} / 5`], ['Kit contents', `${item.kitParts?.length || 0} parts`]]) {
+        const group = document.createElement('div'); const term = document.createElement('dt'); const detail = document.createElement('dd');
+        term.textContent = label; detail.textContent = value; group.append(term, detail); meta.append(group);
+      }
+      const description = document.createElement('p'); description.className = 'gear-admin-excerpt'; description.textContent = item.description;
+      const actions = document.createElement('div'); actions.className = 'inventory-actions';
+      const editButton = document.createElement('button'); editButton.type = 'button'; editButton.className = 'inventory-edit'; editButton.textContent = 'Edit gear'; editButton.setAttribute('aria-label', `Edit ${item.name}`); editButton.onclick = () => edit(item);
+      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'inventory-delete'; remove.textContent = 'Delete'; remove.setAttribute('aria-label', `Delete ${item.name}`);
+      remove.onclick = () => { pending = item; deleteMessage.textContent = `“${item.name}” will be removed from the public collection.`; dialog.showModal(); };
+      actions.append(editButton, remove); copy.append(category, title, meta, description); card.append(photo, copy, actions); list.append(card);
+    }
+  };
   const load=async(message='')=>{status.textContent='Loading gear…';try{const response=await fetch('/admin/api/gear',{credentials:'same-origin'});if(!response.ok)throw new Error(await errorText(response));const result=await response.json();render(Array.isArray(result.items)?result.items:[]);status.textContent=message}catch(error){status.textContent=error instanceof Error?error.message:'Could not load gear.';list.textContent='The collection could not be loaded. Refresh to try again.'}};
   inventorySearch.addEventListener('input',()=>render(inventory));
   inventoryOwner.addEventListener('change',()=>render(inventory));
@@ -78,4 +111,27 @@ import '../styles/site.css';
 <style is:global>
 .gear-admin-panel{border-radius:22px!important;border-color:#ffffff26!important;background:linear-gradient(135deg,#ffffff06,#93e9f905)!important}.gear-admin-panel .admin-panel-heading h2{font-size:clamp(2rem,3vw,3rem)}.gear-admin-panel .admin-panel-heading p:last-child{max-width:560px;color:#bbb;margin:14px 0 0;font-size:15px}.gear-form-group{border:0;border-top:1px solid #ffffff24;padding:26px 0 0;margin:0 0 30px;min-width:0}.gear-form-group legend{padding:0 14px 0 0;color:var(--blue);font-size:12px;font-weight:800;letter-spacing:.06em}.gear-admin-panel #gear-form .admin-fields input,.gear-admin-panel #gear-form .admin-fields select,.gear-admin-panel #gear-form .admin-fields textarea,.gear-admin-filters input,.gear-admin-filters select{border:1px solid #ffffff40;border-radius:10px;background:#ffffff08;color:white;padding:13px;font:inherit;width:100%;color-scheme:dark}.gear-admin-panel .admin-fields textarea{min-height:120px}.gear-admin-panel .admin-fields small{font-weight:400;line-height:1.5}.gear-admin-panel #gear-submit{background:var(--blue)}.gear-admin-filters{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:18px;margin-bottom:24px}.gear-admin-filters label{display:grid;gap:8px;font-size:13px}.gear-admin-filters>span{font-size:12px;padding-bottom:14px;color:#bbb}.gear-admin-panel .admin-gear-card{grid-template-columns:100px minmax(0,1fr);padding:20px;gap:22px;border:1px solid #ffffff26;border-radius:16px;background:#ffffff05}.gear-admin-panel .admin-gear-card img{width:100px;height:100px;border-radius:10px}.gear-admin-panel .admin-gear-card>div:only-child{grid-column:1/-1}.gear-admin-panel .admin-gear-card h3{font-size:1.3rem;overflow-wrap:anywhere}.gear-admin-panel .admin-gear-card p{font-size:13px;margin-bottom:10px}.gear-admin-excerpt{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.gear-admin-panel .admin-actions{margin-top:16px}.gear-admin-panel .admin-actions button{min-height:44px}.gear-admin-panel .admin-gear-card .eyebrow{color:var(--blue)}
 @media(max-width:600px){.gear-admin-filters{grid-template-columns:1fr}.gear-admin-filters>span{padding:0}.gear-admin-panel .admin-gear-card{grid-template-columns:1fr}.gear-admin-panel .admin-gear-card img{width:80px;height:80px}}
+</style>
+
+<style is:global>
+#gear-list{gap:14px}
+#gear-list .admin-gear-card{display:grid;grid-template-columns:88px minmax(0,1fr) 112px;align-items:start;gap:24px;padding:24px;background:#ffffff04;border:1px solid #ffffff20;border-radius:18px}
+#gear-list .inventory-photo{display:grid;place-items:center;width:88px;height:88px;border-radius:12px;background:white;color:#666;font-size:12px;overflow:hidden}
+#gear-list .inventory-photo img{width:100%;height:100%;object-fit:contain;padding:8px;border-radius:0}
+#gear-list .inventory-copy{min-width:0}
+#gear-list .inventory-copy .eyebrow{font-size:10px;letter-spacing:.1em;margin:0 0 8px;color:var(--blue)}
+#gear-list h3{font-size:1.25rem;line-height:1.3;letter-spacing:-.025em;margin:0 0 18px;overflow-wrap:anywhere}
+#gear-list .inventory-facts{display:grid;grid-template-columns:minmax(130px,1.5fr) 1fr 1fr;gap:16px;margin:0 0 16px}
+#gear-list .inventory-facts dt{color:#aaa;font-size:11px;margin-bottom:5px}
+#gear-list .inventory-facts dd{margin:0;font-size:13px;line-height:1.5;color:#f4f4f4;overflow-wrap:anywhere}
+#gear-list .gear-admin-excerpt{margin:0;font-size:13px;line-height:1.6;color:#aaa;white-space:normal;overflow-wrap:anywhere}
+#gear-list .inventory-actions{display:flex;flex-direction:column;gap:8px}
+#gear-list .inventory-actions button{display:flex;align-items:center;justify-content:center;min-height:44px;padding:11px 16px;border:1px solid #ffffff30;border-radius:10px;background:#ffffff08;color:white;font:700 13px var(--body);cursor:pointer;transition:background-color 180ms ease,border-color 180ms ease}
+#gear-list .inventory-actions .inventory-edit{background:#93e9f918;border-color:#93e9f950;color:#bbf1fc}
+#gear-list .inventory-actions .inventory-delete{background:transparent;border-color:transparent;color:#efb0b6}
+#gear-list .inventory-edit:hover{background:#93e9f930;border-color:#93e9f980}
+#gear-list .inventory-delete:hover{background:#fdbfbf12;border-color:#fdbfbf40}
+@media(max-width:850px){#gear-list .admin-gear-card{grid-template-columns:72px minmax(0,1fr);gap:18px}#gear-list .inventory-photo{width:72px;height:72px}#gear-list .inventory-actions{grid-column:2;flex-direction:row;border-top:1px solid #ffffff18;padding-top:14px}#gear-list .inventory-facts{grid-template-columns:1fr 1fr}#gear-list .inventory-facts>div:first-child{grid-column:1/-1}}
+@media(max-width:480px){#gear-list .admin-gear-card{padding:18px;grid-template-columns:minmax(0,1fr)}#gear-list .inventory-actions{grid-column:1}#gear-list .inventory-actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){#gear-list .inventory-actions button{transition:none}}
 </style>
