@@ -1,3 +1,4 @@
+import { revealCollectionValue } from './collection-value-roll';
 type GearItem = { id: string; name: string; category: string; owner?: string; rating: number; description: string; kitParts: string[]; imageUrl?: string | null; imageAlt?: string | null };
 const element = <K extends keyof HTMLElementTagNameMap>(tag: K, className = '', text = '') => {
   const node = document.createElement(tag); node.className = className; node.textContent = text; return node;
@@ -115,6 +116,7 @@ clear.addEventListener('click', () => { search.value = ''; document.querySelecto
       ? `Based on ${summary.valuedItemCount} of ${summary.itemCount} items. Items without a value are excluded.`
       : 'Across the entire collection.';
     panel.hidden = false;
+    if (summary.valuedItemCount) revealCollectionValue(amount);
   };
 
 fetch('/api/gear').then(async response => {

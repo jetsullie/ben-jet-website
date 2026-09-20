@@ -6,7 +6,7 @@ import Arrow from '../components/common/Arrow.astro';
   <section class="about-page section-shell">
     <div class="glass-shapes glass-shapes--blue about-glass" aria-hidden="true"><span class="glass-shape glass-cross"></span></div>
     <div class="wrap about-content">
-      <header class="about-intro"><p class="eyebrow">THE PEOPLE BEHIND THE CAMERA</p><h1>About us.</h1><p>Two perspectives. One shared vision.<br />Based in <span data-site-location>Austin, Texas</span>.</p></header>
+      <header class="about-intro"><p class="eyebrow">THE PEOPLE BEHIND THE CAMERA</p><h1><span class="attention-ink statement-ink statement-ink--mint" data-attention>ABOUT US.</span></h1><p>Two perspectives. One shared vision.<br />Based in <span data-site-location>Austin, Texas</span>.</p></header>
       <div class="about-profiles">
         {['jet','ben'].map((person,index)=><article class:list={['about-profile',`about-profile--${person}`]} aria-labelledby={`${person}-name`}>
           <span class="eyebrow">0{index+1} / FILMMAKER</span><h2 id={`${person}-name`}>{person==='jet'?'Jet Sullivan':'Ben Stapleton'}</h2>
