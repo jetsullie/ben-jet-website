@@ -758,3 +758,12 @@ h3{font-size:1.65rem;line-height:1.15}
 .gear-browser .gear-tools button[aria-expanded=true],.gear-browser .gear-tools button[data-active=true],.gear-browser .gear-filters button[aria-pressed=true]{background:radial-gradient(ellipse at var(--glass-light-x,50%) var(--glass-light-y,30%),#ffffff66,transparent 75%),linear-gradient(135deg,#ffffff33,#fdbfbf3b)}
 .gear-browser .gear-tools button[aria-expanded=true]::before,.gear-browser .gear-tools button[data-active=true]::before,.gear-browser .gear-filters button[aria-pressed=true]::before{opacity:1}
 @media(prefers-reduced-motion:reduce){.gear-browser .gear-tools,.gear-panel-reveal,.gear-browser .gear-tools button,.gear-browser .gear-filters button,.gear-browser .gear-tools button::before,.gear-browser .gear-filters button::before{transition:none!important}}
+
+/* Category divisions and white product surfaces keep the collection easy to scan. */
+.gear-category-group+.gear-category-group{padding-top:30px;border-top:1px solid #25252520}
+.gear-preview-photo{background:#fff;border-bottom:1px solid #25252514}
+.gear-detail-image{background:#fff;border:1px solid #25252518;box-shadow:0 4px 18px #25252506}
+.gear-detail-close{width:48px;height:48px;min-height:48px;padding:10px;justify-content:center;border:0;border-radius:0;background:transparent;box-shadow:none;transition:color 180ms ease}
+.gear-detail-close:hover{color:#a53e67}
+.gear-detail-close:focus-visible{outline:2px solid #a53e67;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.gear-detail-close{transition:none}}

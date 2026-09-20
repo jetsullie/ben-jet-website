@@ -57,8 +57,13 @@ function render() {
   results.replaceChildren();
   if (!visible.length) { results.append(element('p', 'gear-empty', items.length ? 'No matching gear. Try another name, category, or owner.' : 'Our gear collection is coming soon.')); return; }
   const categories = [...new Set(visible.map(item => item.category))].sort();
-  const grid = element('div', 'gear-card-grid');
-  for (const category of categories) {
+  for (const [index, category] of categories.entries()) {
+    const section = element('section', 'gear-category-group');
+    const heading = element('h3', '', category);
+    heading.id = `gear-category-${index}`;
+    section.setAttribute('aria-labelledby', heading.id);
+    const grid = element('div', 'gear-card-grid');
+    section.append(heading, grid);
     for (const item of visible.filter(item => item.category === category).sort((a, b) => a.name.localeCompare(b.name))) {
       const card = element('button', 'gear-preview'); card.type = 'button'; card.setAttribute('aria-haspopup', 'dialog');
       const photo = element('span', 'gear-preview-photo'); photo.append(imageFor(item));
@@ -66,8 +71,8 @@ function render() {
       copy.append(element('span', 'gear-preview-owner', `${item.category} · ${item.owner || 'Our collection'}`), element('strong', '', item.name), element('span', 'gear-preview-description', item.description), element('span', 'gear-preview-meta', `Condition ${Number(item.rating).toFixed(1)} / 5${item.kitParts?.length ? ` · ${item.kitParts.length} kit parts` : ''}`), element('span', 'gear-preview-link', 'Explore gear ↗'));
       card.append(photo, copy); card.addEventListener('click', () => openItem(item, card)); grid.append(card);
     }
+    results.append(section);
   }
-  results.append(grid);
 }
 const tools = document.querySelector<HTMLElement>('.gear-tools')!;
 const syncTools = () => {
