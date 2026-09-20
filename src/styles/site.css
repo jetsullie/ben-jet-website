@@ -784,8 +784,9 @@ h3{font-size:1.65rem;line-height:1.15}
 .admin-main>.glass-shapes .glass-shape--small{top:58%;right:8%}
 @media(max-width:600px){.admin-main>.glass-shapes{opacity:.4}.admin-main>.glass-shapes .glass-shape--panel{width:70vw}.admin-main>.glass-shapes .glass-shape--orb{width:75vw}}
 
-.gear-value-summary { margin: 0 0 28px; padding: clamp(20px, 4vw, 32px); border: 1px solid #25252526; border-radius: 18px; background: #fff; color: #252525; }
+.gear-value-summary { margin: 0 0 36px; padding: clamp(20px, 4vw, 40px) 0; color: var(--white); text-align: center; }
 .gear-value-summary[hidden] { display: none; }
-.gear-value-summary > span { display: block; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.gear-value-summary > strong { display: block; margin: 10px 0; font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.15; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.gear-value-summary > small { display: block; line-height: 1.5; color: #555; }
+.gear-value-summary > .eyebrow { display: block; margin: 0 0 18px; color: var(--white); }
+.gear-value-summary > strong { display: block; margin: 0; color: var(--pink); font: 900 clamp(2.6rem, 4.4vw, 4.2rem)/1.02 var(--display); letter-spacing: -.065em; overflow-wrap: anywhere; }
+.gear-value-summary > small { display: block; max-width: 42ch; margin: 18px auto 0; color: var(--white); line-height: 1.5; }
+@media(max-width:600px) { .gear-value-summary > strong { font-size: clamp(2.3rem, 10.5vw, 3.8rem); } }
