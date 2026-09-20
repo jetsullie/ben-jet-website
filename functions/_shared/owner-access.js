@@ -2,12 +2,25 @@ import cloudflareAccessPlugin from '@cloudflare/pages-plugin-cloudflare-access';
 
 import { isAuthorizedAdmin } from './admin-identity.js';
 
+const accessDomain = (env) => {
+  const configured = env.CF_ACCESS_DOMAIN || env.CF_ACCESS_TEAM_DOMAIN;
+  if (typeof configured !== 'string') return '';
+  const value = configured.trim().replace(/\/+$/, '');
+  return value && !/^https?:\/\//i.test(value) ? `https://${value}` : value;
+};
+
 export const requireOwner = async (context) => {
-  const rawDomain = context.env.CF_ACCESS_DOMAIN || context.env.CF_ACCESS_TEAM_DOMAIN;
-  const domain = typeof rawDomain === 'string' ? rawDomain.trim().replace(/\/+$/, '') : '';
-  const aud = typeof context.env.CF_ACCESS_AUD === 'string' ? context.env.CF_ACCESS_AUD.trim() : '';
-  if (!/^https:\/\/[a-z0-9-]+\.cloudflareaccess\.com$/i.test(domain) || aud.length < 10) {
-    return new Response('Admin authentication is not configured.', { status: 503, headers: { 'Cache-Control': 'no-store' } });
+  const domain = accessDomain(context.env);
+  const configuredAud = context.env.CF_ACCESS_AUD || context.env.CF_ACCESS_AUDIENCE;
+  const aud = typeof configuredAud === 'string' ? configuredAud.trim() : '';
+  const missing = [];
+  if (!/^https:\/\/[a-z0-9-]+\.cloudflareaccess\.com$/i.test(domain)) missing.push('CF_ACCESS_DOMAIN');
+  if (aud.length < 10) missing.push('CF_ACCESS_AUD');
+  if (missing.length) {
+    return new Response(`Admin authentication is not configured. Missing Pages variable: ${missing.join(', ')}. Set it for the deployed environment, not only Preview.`, {
+      status: 503,
+      headers: { 'Cache-Control': 'no-store' },
+    });
   }
   const validateAccess = cloudflareAccessPlugin({ domain, aud });
   return validateAccess({ ...context, next: async () => {
