@@ -687,6 +687,7 @@ h3{font-size:1.65rem;line-height:1.15}
   top: -8%;
   right: calc(50% - 70vw);
   width: max(560px, 56vw);
+  border-width: clamp(40px, 7vw, 100px);
 }
 @media(max-width:600px) {
   .contact-hero .glass-shape--orb {
@@ -694,4 +695,9 @@ h3{font-size:1.65rem;line-height:1.15}
     right: calc(50% - 95vw);
     width: max(360px, 100vw);
   }
+}
+
+.contact-hero .story-heading .attention-ink {
+  font-size: clamp(1.5rem, 8vw, 7.5rem);
+  white-space: nowrap;
 }
